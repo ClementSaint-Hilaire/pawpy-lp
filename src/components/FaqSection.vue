@@ -4,12 +4,8 @@ import faqImage from '@/assets/figma/faq-image.png'
 import iconPlus from '@/assets/figma/icons/plus.svg'
 import iconMinus from '@/assets/figma/icons/minus.svg'
 
-/*
- * Questions reprises littéralement du Figma. Seule la première réponse est
- * visible dans la maquette (elle mentionne encore « Anomi ») ; les quatre
- * autres y sont masquées et remplies d'un texte anglais sans rapport, donc les
- * réponses françaises du site actuel ont été conservées.
- */
+// Questions reprises du Figma ; les réponses viennent du site actuel (celles
+// de la maquette sont masquées et remplies d'un texte anglais sans rapport).
 const items = [
   {
     question: 'Qu’est-ce que Pawpy ?',
@@ -46,11 +42,9 @@ const toggle = (index) => {
 </script>
 
 <template>
-  <!-- La FAQ est le seul bloc à utiliser une colonne de 1000px, pas le gabarit
-       de 1300px. Les gouttières suivent l'échelle de `.shell` en dessous de xl ;
-       au-delà elles sont inutiles — une colonne de 1000px ne touche jamais les
-       bords d'un viewport de 1280px — et les retirer garde la largeur de la
-       maquette (le padding entrerait sinon dans le `max-w`). -->
+  <!-- Seul bloc en colonne de 1000px, pas le gabarit `.shell` de 1300px. Les
+       gouttières le suivent sous xl ; au-delà elles sont inutiles et entreraient
+       dans le `max-w`, rognant la largeur de la maquette. -->
   <section
     id="faq"
     class="mx-auto w-full max-w-[1000px] px-6 pt-[96px] md:px-10 md:pt-[160px] xl:px-0 xl:pt-[286px]"
@@ -60,8 +54,8 @@ const toggle = (index) => {
         Vous avez une question ?<br class="hidden lg:inline" />
         Nous avons la réponse !
       </h2>
-      <!-- Le décalage de 49px aligne le lien sur la seconde ligne du titre :
-           il n'a de sens que lorsque les deux sont sur la même rangée. -->
+      <!-- Les 49px alignent le lien sur la seconde ligne du titre — seulement
+           utile quand les deux sont sur la même rangée. -->
       <a
         v-reveal="120"
         href="#newsletter"
@@ -103,11 +97,9 @@ const toggle = (index) => {
             </button>
           </dt>
 
-          <!-- `max-h` sert de borne haute à la transition, pas de hauteur cible :
-               elle doit rester au-dessus de la plus longue réponse une fois
-               reflowée en colonne étroite (« Comment sont fixés les prix ? »
-               dépasse largement 400px à 320px de large), sans quoi le texte est
-               rogné. -->
+          <!-- `max-h` est une borne haute pour la transition, pas une hauteur
+               cible : elle doit dépasser la plus longue réponse reflowée en
+               colonne étroite, sans quoi le texte est rogné. -->
           <dd
             class="overflow-hidden transition-all duration-300 ease-in-out"
             :class="openIndex === index ? 'max-h-[700px] pb-[16px] opacity-100' : 'max-h-0 opacity-0'"

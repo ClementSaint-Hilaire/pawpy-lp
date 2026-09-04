@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'  // Make sure this line exists
+import router from './router'
 import { reveal } from './directives/reveal'
-import './assets/main.css'      // or your CSS imports
+import './assets/main.css'
 
 const app = createApp(App)
 app.use(router)

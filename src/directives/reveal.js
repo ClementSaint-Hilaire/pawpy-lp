@@ -1,19 +1,18 @@
+import { prefersReducedMotion } from '@/utils/motion'
+
 /**
  * v-reveal — apparition progressive des blocs.
  *
- * Le même mécanisme couvre les deux besoins :
- *   • au chargement, les blocs déjà visibles (hero, en-tête) s'affichent
- *     immédiatement, décalés entre eux par le retard passé en valeur ;
- *   • au scroll, un IntersectionObserver révèle chaque bloc quand il approche
- *     du bas de l'écran. L'observation s'arrête ensuite : l'animation ne se
- *     rejoue pas si on remonte.
+ * Au chargement, les blocs déjà visibles s'affichent immédiatement, décalés
+ * entre eux par le retard passé en valeur ; au scroll, un IntersectionObserver
+ * révèle chaque bloc quand il approche du bas de l'écran, puis cesse de
+ * l'observer (l'animation ne se rejoue pas si on remonte).
  *
  * Usage :
  *   v-reveal                                  → glissement vers le haut
  *   v-reveal="160"                            → idem, 160 ms de retard
  *   v-reveal.left / .right / .scale / .fade   → autre point de départ
  *   v-reveal.highlight                        → surlignage rose déplié
- *                                               de la gauche vers la droite
  *   v-reveal="{ delay: 120, from: 'right' }"  → variante dynamique (v-for, props)
  *
  * `prefers-reduced-motion` coupe tout : aucune classe n'est posée, donc le
@@ -25,17 +24,15 @@ const VARIANTS = ['up', 'left', 'right', 'scale', 'fade', 'highlight']
 // Doit rester aligné sur la durée de transition de `.reveal` (main.css).
 const DURATION = 700
 
+// Un seul observateur pour toute la page, partagé par tous les éléments.
 let observer = null
-
-const prefersReducedMotion = () =>
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const show = (el) => {
   el.classList.add('reveal-visible')
 
   // Une fois l'apparition jouée, on efface toute trace (classes, retard,
-  // will-change) : l'élément retrouve ses transitions d'origine — sans quoi
-  // un lien animé garderait les 700 ms du reveal au survol.
+  // will-change) : sans quoi un lien animé garderait les 700 ms du reveal
+  // au survol.
   window.clearTimeout(el._revealTimer)
   el._revealTimer = window.setTimeout(() => {
     el.classList.remove('reveal', 'reveal-visible', el._revealVariant)
@@ -46,9 +43,7 @@ const show = (el) => {
 }
 
 const getObserver = () => {
-  if (observer) return observer
-
-  observer = new IntersectionObserver(
+  observer ??= new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
@@ -84,8 +79,9 @@ export const reveal = {
     const { delay, from } = parse(binding)
 
     el._revealVariant = `reveal-${from}`
-    el.classList.add('reveal', el._revealVariant)
     el._revealDelay = delay
+    el.classList.add('reveal', el._revealVariant)
+
     if (delay) {
       el.style.transitionDelay = `${delay}ms`
       // `transition-delay` ne descend pas jusqu'aux pseudo-éléments, à la
@@ -94,7 +90,6 @@ export const reveal = {
       el.style.setProperty('--reveal-delay', `${delay}ms`)
     }
 
-    // Si l'API manque (très vieux navigateur), on affiche sans animer.
     if (!('IntersectionObserver' in window)) {
       show(el)
       return
@@ -108,5 +103,3 @@ export const reveal = {
     observer?.unobserve(el)
   },
 }
-
-export default reveal

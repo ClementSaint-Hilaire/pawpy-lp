@@ -1,15 +1,6 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import SheetOverlay from '@/components/SheetOverlay.vue'
-
-/**
- * Manifeste — feuille qui descend du haut de l'écran (Figma 3217:4460).
- *
- * Vraie page (/manifest) rendue comme une modale : le routeur y sert
- * l'accueil, qui reste monté derrière. Toute la mécanique — voile,
- * animation, verrou de défilement, accessibilité — vient de SheetOverlay.vue.
- */
+import { useRouteSheet } from '@/composables/useRouteSheet'
 
 // Le blanc entre deux paragraphes reprend la ligne vide de la maquette.
 const paragraphs = [
@@ -20,14 +11,7 @@ const paragraphs = [
   'Pawpy, c’est l’art de la promenade canine.',
 ]
 
-const route = useRoute()
-const router = useRouter()
-
-const open = computed(() => route.path === '/manifest')
-
-const close = () => {
-  if (open.value) router.push('/')
-}
+const { open, close } = useRouteSheet('/manifest')
 </script>
 
 <template>

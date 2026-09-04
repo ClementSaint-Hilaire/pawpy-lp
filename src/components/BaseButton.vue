@@ -1,11 +1,9 @@
 <script setup>
+import { externalAttrs } from '@/utils/links'
+
 /**
- * Bouton du Figma : rectangle à angles droits, Sora 14px.
- * La paire « noir plein + blanc bordé » revient dix fois dans la page
- * (hero, stats, et les quatre sections features).
- *
- * Les deux tailles reprennent celles de la maquette : 54px de haut avec de
- * larges marges dans le hero, 50px de haut et des marges serrées ailleurs.
+ * Bouton du Figma : rectangle à angles droits, Sora 14px. Deux tailles, celles
+ * de la maquette — 54px de haut dans le hero, 50px ailleurs.
  */
 defineProps({
   variant: {
@@ -23,16 +21,13 @@ defineProps({
     default: null,
   },
 })
-
-const isExternal = (href) => Boolean(href) && href.startsWith('http')
 </script>
 
 <template>
   <component
     :is="href ? 'a' : 'button'"
     :href="href"
-    :target="isExternal(href) ? '_blank' : null"
-    :rel="isExternal(href) ? 'noopener noreferrer' : null"
+    v-bind="externalAttrs(href)"
     class="inline-flex items-center justify-center whitespace-nowrap font-body text-label transition-colors"
     :class="[
       size === 'lg' ? 'px-[43px] py-[16px]' : 'px-[14px] py-[14px]',

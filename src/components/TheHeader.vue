@@ -5,16 +5,7 @@ import MobileNav from './MobileNav.vue'
 import logo from '@/assets/figma/logo-pawpy.svg'
 
 // `to` désigne une vraie page (l'équipe, le manifeste), `href` une ancre dans
-// l'accueil : le gabarit ci-dessous choisit la balise en conséquence, et lie
-// l'un ou l'autre par un `v-bind` conditionnel — `:href="undefined"` posé à
-// côté de `:to` remonterait jusqu'à la racine du RouterLink et effacerait l'URL
-// qu'il calcule, laissant un <a> sans href (ni clic milieu, ni nouvel onglet).
-//
-// Les deux liaisons s'excluent (`v-bind` conditionnel) : un `:href` posé de
-// l'extérieur, même valant `undefined`, écraserait celui que RouterLink calcule
-// — le lien perdrait son URL (clic milieu, « ouvrir dans un onglet »…).
-//
-// La même liste alimente la barre desktop et la feuille mobile (MobileNav.vue).
+// l'accueil. La même liste alimente la barre desktop et MobileNav.vue.
 const links = [
   { label: 'Features', href: '#features' },
   { label: 'Équipe', to: '/auto-mode-setup' },
@@ -36,6 +27,10 @@ const menuOpen = ref(false)
       </a>
 
       <nav class="hidden flex-1 items-center justify-end gap-[32px] xl:flex">
+        <!-- Les deux liaisons s'excluent (`v-bind` conditionnel) : un `:href`
+             posé de l'extérieur, même valant `undefined`, écraserait celui que
+             RouterLink calcule et le lien perdrait son URL (clic milieu,
+             « ouvrir dans un onglet »…). -->
         <component
           :is="link.to ? RouterLink : 'a'"
           v-for="(link, index) in links"
@@ -56,8 +51,7 @@ const menuOpen = ref(false)
         </a>
       </nav>
 
-      <!-- Bouton d'ouverture du menu, dessiné en CSS (pas d'icône à charger).
-           Les trois traits gardent la couleur du texte, comme les liens. -->
+      <!-- Bouton d'ouverture du menu, dessiné en CSS (pas d'icône à charger). -->
       <button
         v-reveal.fade
         type="button"

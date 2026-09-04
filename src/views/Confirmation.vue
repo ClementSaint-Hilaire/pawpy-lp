@@ -1,51 +1,43 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const params = new URLSearchParams(window.location.search);
-const email = params.get('email') || '';
-const token = params.get('token') || '';
-const loading = ref(true);
-const error = ref('');
+const { email = '', token = '' } = useRoute().query
+const loading = ref(true)
+const error = ref('')
 
 onMounted(async () => {
   if (!token) {
-    error.value = 'Invalid confirmation link';
-    loading.value = false;
-    return;
+    error.value = 'Lien de confirmation invalide'
+    loading.value = false
+    return
   }
 
   try {
-    // Call backend with token for validation
-    const response = await fetch(`${import.meta.env.VITE_APP_URL}/confirm?token=${token}`);
-
+    const response = await fetch(`${import.meta.env.VITE_APP_URL}/confirm?token=${token}`)
     if (!response.ok) {
-      const text = await response.text();
-      error.value = text || 'Confirmation failed';
+      error.value = (await response.text()) || 'Échec de la confirmation'
     }
   } catch (err) {
-    error.value = 'Network error';
-    console.error(err);
+    console.error('Confirmation error:', err)
+    error.value = 'Erreur réseau'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-});
+})
 </script>
 
 <template>
-  <!-- Cette vue est servie seule (pas de header ni de footer) : la marge haute
-       remplace la hauteur de l'en-tête. -->
+  <!-- Vue servie seule (ni header ni footer) : la marge haute remplace la
+       hauteur de l'en-tête. -->
   <div class="shell mt-[96px] pb-[64px] text-center xl:mt-[176px]">
-    <p v-if="loading" class="font-sans text-base text-ink-60">
-      Confirmation en cours...
-    </p>
+    <p v-if="loading" class="font-sans text-base text-ink-60">Confirmation en cours...</p>
 
-    <p v-else-if="error" class="font-sans text-base text-danger">
-      {{ error }}
-    </p>
+    <p v-else-if="error" class="font-sans text-base text-danger">{{ error }}</p>
 
     <div v-else class="mx-auto max-w-[682px]">
       <h1 class="text-title [word-break:break-word]">
-        Merci pour votre soutien ! Vous recevrez toutes nos informations sur votre mail : {{ email }} !
+        Merci pour votre soutien ! Vous recevrez toutes nos informations sur votre mail : {{ email }} !
       </h1>
       <p class="mt-[16px] font-sans text-label text-ink-60">
         Vous pouvez maintenant fermer cette page

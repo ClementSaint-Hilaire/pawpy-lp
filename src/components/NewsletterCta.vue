@@ -9,10 +9,9 @@ const embedHost = ref(null)
 
 /**
  * Le loader beehiiv v3 scanne les `script[data-beehiiv-form]` à son exécution
- * et insère l'iframe du formulaire juste après la balise trouvée. On plante
- * donc d'abord le marqueur dans le conteneur, puis le loader : dans une SPA le
- * document est déjà « complete », l'init part immédiatement et l'iframe atterrit
- * au bon endroit du bloc.
+ * et insère l'iframe juste après la balise trouvée. D'où l'ordre : marqueur
+ * d'abord, loader ensuite — dans une SPA le document est déjà « complete »,
+ * l'init part aussitôt et l'iframe atterrit au bon endroit.
  */
 onMounted(() => {
   const host = embedHost.value
@@ -51,21 +50,17 @@ onBeforeUnmount(() => {
           premiers à nous rejoindre, vous pouvez vous inscrire à la newsletter.
         </p>
 
-        <!-- Formulaire hébergé par beehiiv (iframe inline, fond transparent,
-             layout « slim » : champ + bouton sur une ligne, 400px de large).
-             min-h : réserve la hauteur du champ pour éviter le saut de mise en
-             page au moment où l'iframe se déplie. -->
+        <!-- Formulaire beehiiv (iframe inline). `min-h` réserve la hauteur du
+             champ pour éviter le saut de mise en page au dépliage. -->
         <div
           ref="embedHost"
           class="mt-[32px] min-h-[45px] w-full max-w-[400px]"
         />
       </div>
 
-      <!-- Illustration au trait. L'export reprend déjà le recadrage du Figma
-           (374×418, l'image d'origine débordant du bloc) : à poser tel quel.
-           Sa position est celle du bloc de 1300px ; sous xl elle tomberait
-           entièrement hors cadre (le parent la rognerait sans rien laisser
-           voir), donc on la retire explicitement. -->
+      <!-- L'export reprend déjà le recadrage du Figma : à poser tel quel. Sa
+           position vise le bloc de 1300px ; sous xl elle tomberait hors cadre,
+           d'où le retrait explicite. -->
       <img
         v-reveal="{ delay: 280, from: 'right' }"
         :src="ctaPaw"

@@ -4,16 +4,9 @@ import photoElea from '@/assets/figma/team/elea-dagron.jpg'
 import photoVincent from '@/assets/figma/team/vincent-blasini.jpg'
 import photoAnthony from '@/assets/figma/team/anthony-brosse.jpg'
 
-/**
- * L'équipe derrière Pawpy (Figma 3218:4469), affichée dans TeamOverlay.vue.
- *
- * L'ordre est celui de la maquette : les cinq portraits se répartissent en
- * trois puis deux, la seconde ligne étant centrée par le retour à la ligne de
- * la grille.
- *
- * `link` : portfolio ou profil LinkedIn ouvert dans un nouvel onglet au clic
- * sur le portrait.
- */
+// L'ordre est celui de la maquette : les cinq portraits se répartissent en
+// trois puis deux, la seconde ligne étant centrée par le retour à la ligne de
+// la grille. `link` : portfolio ou profil LinkedIn du membre.
 export const team = [
   {
     name: 'Carla Coelho',
@@ -46,5 +39,3 @@ export const team = [
     link: 'https://www.linkedin.com/in/anthony-brosse/',
   },
 ]
-
-export default team

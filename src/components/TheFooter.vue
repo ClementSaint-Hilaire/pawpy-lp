@@ -1,5 +1,6 @@
 <script setup>
 import FooterDog from './FooterDog.vue'
+import { externalAttrs } from '@/utils/links'
 
 const links = [
   { label: 'Demander une démo', href: 'mailto:contact@pawpy.fr' },
@@ -8,7 +9,9 @@ const links = [
   { label: 'Devenir bêta testeur', href: 'mailto:contact@pawpy.fr?subject=demande%20de%20beta%20test' },
 ]
 
-const isExternal = (href) => href.startsWith('http')
+// Le chien s'intercale entre le 2e et le 3e lien : les deux derniers attendent
+// donc un cran de plus.
+const revealDelay = (index) => index * 80 + (index > 1 ? 80 : 0)
 </script>
 
 <template>
@@ -17,40 +20,26 @@ const isExternal = (href) => href.startsWith('http')
       <!--
         À partir de xl, les quatre liens et l'illustration se répartissent sur
         une seule ligne : un simple justify-between reproduit les positions de
-        la maquette (0 / 299 / centre / 911 / 1125 sur 1300px). En dessous, la
-        rangée ferait ~900px de large : elle passe en colonne, l'illustration
-        remontant en tête (`order-first`, cf. FooterDog) pour que les quatre
-        liens se suivent dans l'ordre du DOM.
+        la maquette. En dessous, la rangée ferait ~900px de large : elle passe
+        en colonne, l'illustration remontant en tête (`order-first`) pour que
+        les quatre liens se suivent dans l'ordre du DOM.
       -->
       <div
         class="flex flex-col items-center gap-[20px] xl:h-[398px] xl:flex-row xl:justify-between xl:gap-0"
       >
-        <a
-          v-for="(link, index) in links.slice(0, 2)"
-          v-reveal="index * 80"
-          :key="link.label"
-          :href="link.href"
-          :target="isExternal(link.href) ? '_blank' : null"
-          :rel="isExternal(link.href) ? 'noopener noreferrer' : null"
-          class="whitespace-nowrap font-sans text-base text-ink-60 transition-colors hover:text-ink"
-        >
-          {{ link.label }}
-        </a>
+        <template v-for="(link, index) in links" :key="link.label">
+          <a
+            v-reveal="revealDelay(index)"
+            :href="link.href"
+            v-bind="externalAttrs(link.href)"
+            class="whitespace-nowrap font-sans text-base text-ink-60 transition-colors hover:text-ink"
+          >
+            {{ link.label }}
+          </a>
 
-        <!-- Le chien se dessine trait par trait à l'entrée dans l'écran. -->
-        <FooterDog class="order-first xl:order-none" />
-
-        <a
-          v-for="(link, index) in links.slice(2)"
-          v-reveal="240 + index * 80"
-          :key="link.label"
-          :href="link.href"
-          :target="isExternal(link.href) ? '_blank' : null"
-          :rel="isExternal(link.href) ? 'noopener noreferrer' : null"
-          class="whitespace-nowrap font-sans text-base text-ink-60 transition-colors hover:text-ink"
-        >
-          {{ link.label }}
-        </a>
+          <!-- Le chien se dessine trait par trait à l'entrée dans l'écran. -->
+          <FooterDog v-if="index === 1" class="order-first xl:order-none" />
+        </template>
       </div>
 
       <p
@@ -62,14 +51,10 @@ const isExternal = (href) => href.startsWith('http')
     </div>
 
     <!--
-      Bandeau de crédits, aligné sur les bords de la page (50px de marge à
-      partir de xl).
-
-      La marge basse est plus généreuse sous xl qu'elle n'en a l'air besoin :
-      `v-reveal` observe avec un `rootMargin` de -12 %, si bien qu'un bloc collé
-      au bas du document ne franchit jamais la ligne de déclenchement et
-      resterait à `opacity: 0`. Cet espace l'en écarte — et aère le pied de page
-      sur mobile.
+      Bandeau de crédits. La marge basse est plus généreuse qu'il n'y paraît
+      nécessaire : `v-reveal` observe avec un `rootMargin` de -12 %, si bien
+      qu'un bloc collé au bas du document ne franchirait jamais la ligne de
+      déclenchement et resterait à `opacity: 0`.
     -->
     <div
       v-reveal.fade

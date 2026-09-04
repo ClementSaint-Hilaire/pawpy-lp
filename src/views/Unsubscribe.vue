@@ -1,42 +1,36 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const params = new URLSearchParams(window.location.search);
-const email = params.get('email') || '';
-const loading = ref(true);
-const success = ref(false);
-const error = ref('');
+const { email = '' } = useRoute().query
+const loading = ref(true)
+const success = ref(false)
+const error = ref('')
 
 onMounted(async () => {
-  if (!email) {
-    error.value = 'Lien de désinscription invalide';
-    loading.value = false;
-    return;
-  }
-
   try {
     const response = await fetch(
-        `${import.meta.env.VITE_APP_URL}/unsubscribe?email=${encodeURIComponent(email)}`,
-        { method: 'POST' }
-    );
+      `${import.meta.env.VITE_APP_URL}/unsubscribe?email=${encodeURIComponent(email)}`,
+      { method: 'POST' },
+    )
 
     if (response.ok) {
-      success.value = true;
+      success.value = true
     } else {
-      error.value = 'Échec de la désinscription';
+      error.value = 'Échec de la désinscription'
     }
   } catch (err) {
-    console.error('Unsubscribe error:', err);
-    error.value = 'Erreur réseau';
+    console.error('Unsubscribe error:', err)
+    error.value = 'Erreur réseau'
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-});
+})
 </script>
 
 <template>
-  <!-- Cette vue est servie seule (pas de header ni de footer) : la marge haute
-       remplace la hauteur de l'en-tête. -->
+  <!-- Vue servie seule (ni header ni footer) : la marge haute remplace la
+       hauteur de l'en-tête. -->
   <div class="shell mt-[96px] pb-[64px] text-center xl:mt-[176px]">
     <div v-if="loading">
       <div
@@ -52,10 +46,10 @@ onMounted(async () => {
 
     <div v-else-if="success" class="mx-auto max-w-[682px]">
       <h1 class="text-title [word-break:break-word]">
-        Nous sommes désolés de vous voir partir &#128546 Nous espérons que vous reviendrez bientôt !
+        Nous sommes désolés de vous voir partir &#128546; Nous espérons que vous reviendrez bientôt !
       </h1>
       <p class="mt-[16px] font-sans text-label text-ink-60 [word-break:break-word]">
-        Vous ne recevrez plus nos emails sur votre mail : {{ email }}
+        Vous ne recevrez plus nos emails sur votre mail : {{ email }}
       </p>
       <p class="mt-[16px] font-sans text-label text-ink-60">
         Vous pouvez maintenant fermer cette page

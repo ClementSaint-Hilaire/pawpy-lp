@@ -9,10 +9,9 @@ import TeamOverlay from './components/TeamOverlay.vue'
   <RouterView />
 
   <!-- Modales de page (/manifest, /auto-mode-setup) : posées par-dessus
-       l'accueil, hors du RouterView. -->
+       l'accueil, hors du RouterView — comme le curseur, qui doit survivre aux
+       changements de page. -->
   <ManifestOverlay />
   <TeamOverlay />
-
-  <!-- Curseur « patte » : hors du RouterView pour survivre aux changements de page. -->
   <TheCursor />
 </template>

@@ -12,9 +12,8 @@ import badgeAcaced from '@/assets/figma/icons/badge-acaced.png'
 
 const avatars = [avatar1, avatar2, avatar3]
 
-// Pastilles de certification (Figma node 3203:2683) : la vignette figée a été
-// remplacée par quatre éléments distincts, seul moyen de les faire apparaître
-// l'une après l'autre.
+// Quatre éléments distincts plutôt que la vignette figée du Figma : c'est le
+// seul moyen de les faire apparaître l'une après l'autre.
 const badges = [
   { label: 'Pawpy\u00a0 P1', icon: badgeP1 },
   { label: 'Pawpy\u00a0 P2', icon: badgeP2 },
@@ -26,9 +25,7 @@ const badges = [
 <template>
   <!-- pt : le contenu du hero commence à y=128 dans la maquette, sous l'en-tête de 102px. -->
   <section id="probleme" class="shell pt-[26px]">
-    <!-- Bloc de texte centré (Hero Text Container, 1300×380) -->
     <div class="flex flex-col items-center text-center">
-      <!-- Bandeau communauté : trois avatars superposés + intitulé -->
       <div v-reveal class="flex items-center gap-[8px]">
         <div class="flex">
           <img
@@ -43,16 +40,11 @@ const badges = [
         <span class="font-sans text-label text-ink-60">Communautée certifiée</span>
       </div>
 
-      <!-- Le retour à la ligne est celui de la maquette : au-delà de xl, pas de
-           largeur maximale, sinon la police de repli, plus large que Coconat,
-           ajoute une troisième ligne. En dessous, le <br> est neutralisé
-           (`display: none` sur un <br> supprime le saut) et le titre se coupe
-           tout seul là où la largeur l'impose. -->
+      <!-- Pas de largeur maximale au-delà de xl : la police de repli, plus large
+           que Coconat, ajouterait une troisième ligne. En dessous, le <br> est
+           neutralisé et le titre se coupe là où la largeur l'impose. -->
       <h1 v-reveal="100" class="mt-[24px] text-display font-normal uppercase xl:mt-[32px]">
         Votre chic à du chien.<br class="hidden xl:inline" />
-        <!-- Espace insécable avant le « ? » : usage typographique français, et
-             elle évite que le signe se retrouve seul sur une ligne une fois le
-             titre replié sur un écran étroit. -->
         Et si votre chien avait du chic&nbsp;?
       </h1>
 
@@ -61,10 +53,8 @@ const badges = [
         Confiance, transparence, sécurité, tout est pensé pour le bien être de votre chiens.
       </p>
 
-      <!-- Deux boutons `lg` de 43px de marge latérale ne tiennent pas côte à côte
-           sur un téléphone : ils s'empilent en pleine largeur, puis reprennent
-           la grille de la maquette à partir de sm (colonnes 1fr : les deux
-           prennent la largeur du plus large). -->
+      <!-- Deux boutons `lg` ne tiennent pas côte à côte sur un téléphone : ils
+           s'empilent en pleine largeur, puis reprennent la grille à partir de sm. -->
       <div
         v-reveal="300"
         class="mt-[40px] grid w-full grid-cols-1 items-center gap-[12px] sm:w-auto sm:grid-cols-2 sm:gap-[24px] xl:mt-[76px]"
@@ -81,24 +71,16 @@ const badges = [
     </div>
 
     <!--
-      Composition du Figma (Frame 3, 1300×800) : mockup au centre, chien au trait
-      à droite, pastilles de certification en bas à gauche. Les coordonnées sont
-      celles de la maquette, mesurées sur son rendu — elles ne valent qu'à partir
-      de xl, où la scène retrouve ses 1300×800.
-
-      L'ordre du DOM porte la mise en scène : le chien et les badges sont écrits
-      avant le mockup, donc empilés dessous. Ils démarrent leur apparition cachés
-      derrière lui (`--reveal-shift`, cf. les classes `hero-shift-*` de main.css)
-      et en ressortent, le chien vers la droite, les badges vers la gauche l'un
-      après l'autre.
+      Scène de 1300×800 (coordonnées de la maquette, valables à partir de xl).
+      L'ordre du DOM porte la mise en scène : chien et badges sont écrits avant
+      le mockup, donc empilés dessous. Ils démarrent cachés derrière lui
+      (`--reveal-shift`, classes `hero-shift-*` de main.css) et en ressortent.
 
       Sous xl la scène repasse en flux vertical : le mockup remonte en tête
-      (`order`, l'ordre du DOM restant celui de l'empilement desktop), les
-      pastilles se rangent dessous en ligne repliable, et le chien — qui n'a de
-      sens qu'à droite du mockup — est masqué. Les mêmes nœuds servent aux deux
-      mises en page : dupliquer le bloc laisserait la version cachée en
-      `display: none`, où l'IntersectionObserver de `v-reveal` ne se déclenche
-      jamais et l'élément resterait à `opacity: 0`.
+      (`order`), les pastilles se rangent dessous et le chien est masqué. Les
+      mêmes nœuds servent aux deux mises en page — dupliquer le bloc laisserait
+      la copie cachée en `display: none`, où l'IntersectionObserver de
+      `v-reveal` ne se déclenche jamais : elle resterait à `opacity: 0`.
     -->
     <div
       class="mt-[40px] flex flex-col items-center gap-[24px] xl:relative xl:mx-auto xl:mt-[64px] xl:block xl:h-[800px] xl:w-[1300px] xl:max-w-full"
@@ -110,9 +92,8 @@ const badges = [
         class="hero-shift-dog pointer-events-none hidden xl:absolute xl:left-[813px] xl:top-[116px] xl:block xl:w-[290px] xl:max-w-none"
       />
 
-      <!-- Position de la maquette (bloc de pastilles à 235;472) corrigée du
-           débord que la rotation ajoute autour de chaque pastille. L'espacement
-           reconstitue le pas de 58px entre deux pastilles. -->
+      <!-- Position de la maquette corrigée du débord que la rotation ajoute
+           autour de chaque pastille. -->
       <ul
         class="order-2 flex flex-wrap items-center justify-center gap-[8px] xl:absolute xl:left-[237px] xl:top-[482px] xl:order-none xl:block xl:space-y-[12px]"
       >

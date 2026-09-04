@@ -5,33 +5,26 @@ import pawCursor from '@/assets/figma/mouse.svg'
 /**
  * Curseur « patte » — remplace le pointeur système sur tout le site.
  *
- * Un calque suit le pointeur (mouse.svg du Figma) pendant que le curseur natif
- * est masqué par `cursor: none` (voir main.css). Le calque est préféré à
- * `cursor: url(mouse.svg)` pour deux raisons :
- *   • Safari n'accepte pas les SVG comme curseur CSS ;
- *   • le grossissement au survol s'anime, ce qu'un curseur CSS ne permet pas
- *     (il aurait fallu deux fichiers et un saut sec).
+ * Un calque suit le pointeur pendant que le curseur natif est masqué par
+ * `cursor: none` (main.css). Le calque est préféré à `cursor: url(mouse.svg)`
+ * car Safari n'accepte pas les SVG comme curseur CSS, et parce qu'un curseur
+ * CSS ne peut pas animer son grossissement au survol.
  *
- * Le positionnement est écrit à la main dans un rAF (`transform` sur le
- * conteneur, sans transition : le curseur doit coller au pointeur) ; le
- * grossissement vit sur l'image intérieure, qui elle est animée. Sans ces deux
- * niveaux, la transition du `scale` freinerait aussi le déplacement.
+ * Deux niveaux de transform : la position est réécrite dans un rAF sur le
+ * conteneur, sans transition (le curseur doit coller au pointeur), et le
+ * grossissement vit sur l'image intérieure — sinon la transition du `scale`
+ * freinerait aussi le déplacement.
  */
 
-// Largeur d'affichage de la patte, en px. mouse.svg est exporté en 55×57 :
-// à sa taille naturelle il écrase le curseur système, on le réduit donc ici.
-// C'est la seule valeur à retoucher pour changer la taille au repos ; le
-// survol (×1,5) et le clic (×0,75) restent relatifs à celle-ci.
+// Largeur d'affichage de la patte. mouse.svg est exporté en 55×57, trop grand
+// pour un curseur. Seule valeur à retoucher : le survol (×1,5) et le clic
+// (×0,75) restent relatifs à celle-ci.
 const WIDTH = 32
 
-// Rapport entre l'affichage et le fichier d'origine, pour convertir les
-// coordonnées lues dans le SVG.
-const RATIO = WIDTH / 55
-
 // Point de l'image qui remplace la pointe de la flèche système : le coussinet
-// haut-gauche de la patte (16, 8 dans le repère du SVG). Il sert d'origine au
-// `scale` (voir main.css) pour que le curseur grossisse sans que ce point ne
-// bouge.
+// haut-gauche de la patte (16, 8 dans le repère du SVG, d'où le rapport
+// d'échelle). Il sert d'origine au `scale`, qui ne le déplace donc pas.
+const RATIO = WIDTH / 55
 const HOTSPOT_X = 16 * RATIO
 const HOTSPOT_Y = 8 * RATIO
 
@@ -52,8 +45,8 @@ const CLICKABLE = [
   '.cursor-pointer',
 ].join(',')
 
-// Champs de saisie : on y rend la main au curseur natif (barre de texte), la
-// patte masquerait le point d'insertion.
+// Champs de saisie : on rend la main au curseur natif, la patte masquerait le
+// point d'insertion.
 const TEXT_FIELD = [
   'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"])',
   'textarea',
@@ -91,9 +84,8 @@ const onPointerMove = (event) => {
   pointerY = event.clientY
 
   // Première apparition : on place le calque tout de suite, sinon il traverse
-  // l'écran depuis le coin haut-gauche pendant son fondu d'entrée. C'est aussi
-  // le moment où le curseur système s'efface : avant le premier mouvement, sa
-  // position est inconnue, et le masquer plus tôt laisserait la page sans
+  // l'écran depuis le coin haut-gauche pendant son fondu. C'est aussi là qu'on
+  // masque le curseur système — le faire plus tôt laisserait la page sans
   // aucun curseur jusqu'au premier geste.
   if (!visible.value) {
     visible.value = true
@@ -105,11 +97,9 @@ const onPointerMove = (event) => {
   if (!frame) frame = window.requestAnimationFrame(place)
 }
 
-/**
- * `pointerover` plutôt que `pointermove` pour l'état de survol : il ne se
- * déclenche qu'au changement d'élément sous le pointeur, là où `pointermove`
- * relancerait un `closest()` soixante fois par seconde.
- */
+// `pointerover` plutôt que `pointermove` : il ne se déclenche qu'au changement
+// d'élément sous le pointeur, là où `pointermove` relancerait un `closest()`
+// soixante fois par seconde.
 const onPointerOver = (event) => {
   const target = event.target
 

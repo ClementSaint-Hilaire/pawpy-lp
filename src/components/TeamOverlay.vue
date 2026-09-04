@@ -1,25 +1,9 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import SheetOverlay from '@/components/SheetOverlay.vue'
+import { useRouteSheet } from '@/composables/useRouteSheet'
 import { team } from '@/data/team'
 
-/**
- * Équipe — feuille qui descend du haut de l'écran (Figma 3218:4469).
- *
- * Vraie page (/auto-mode-setup) rendue comme une modale : le routeur y sert
- * l'accueil, qui reste monté derrière. Toute la mécanique — voile,
- * animation, verrou de défilement, accessibilité — vient de SheetOverlay.vue.
- */
-
-const route = useRoute()
-const router = useRouter()
-
-const open = computed(() => route.path === '/auto-mode-setup')
-
-const close = () => {
-  if (open.value) router.push('/')
-}
+const { open, close } = useRouteSheet('/auto-mode-setup')
 </script>
 
 <template>
@@ -46,12 +30,8 @@ const close = () => {
           :key="member.name"
           class="portrait-card flex w-[140px] shrink-0 flex-col items-center gap-[8px] sm:w-[200px]"
         >
-          <!-- Cadre fixe 200×240 : les portraits n'ont pas tous le même format,
-               `object-cover` les recadre depuis le centre comme le fait Figma.
-               `portrait-tilt` incline la photo au survol de la carte (main.css) :
-               seule l'image tourne, le nom et la fonction restent d'aplomb.
-               Le portrait est cliquable : il ouvre le portfolio ou le profil
-               LinkedIn du membre dans un nouvel onglet. -->
+          <!-- `portrait-tilt` (main.css) incline la photo au survol de la
+               carte : seule l'image tourne, le nom reste d'aplomb. -->
           <a
             :href="member.link"
             :aria-label="`${member.name} — ouvrir le profil dans un nouvel onglet`"
@@ -68,8 +48,6 @@ const close = () => {
             />
           </a>
 
-          <!-- Nom et fonction se suivent sans écart : 14px en interligne 1,2
-               font deux lignes de 17px, soit le bloc de 34px de la maquette. -->
           <div
             class="flex w-full flex-col font-sans text-[14px] leading-[1.2] tracking-[-0.01em]"
             style="font-feature-settings: 'case' 1"

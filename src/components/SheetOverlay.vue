@@ -3,20 +3,13 @@ import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import closeIcon from '@/assets/figma/icons/close.svg'
 
 /**
- * Feuille tirée du haut de l'écran — mécanique commune aux modales de page
- * (le manifeste et l'équipe, cf. ManifestOverlay.vue et TeamOverlay.vue).
+ * Feuille tirée du haut de l'écran — mécanique commune au manifeste, à l'équipe
+ * et au menu mobile. Le parent fournit le contenu et reçoit `close` ; tout le
+ * reste (voile, verrou de défilement, Échap, piège à focus, bouton de
+ * fermeture) vit ici.
  *
- * Ces modales sont de vraies pages : le routeur sert l'accueil sous un autre
- * chemin (alias), la page reste montée derrière, assombrie. On garde ainsi le
- * scroll et les apparitions déjà jouées, tandis que l'URL, le bouton
- * « précédent » et le partage de lien fonctionnent normalement.
- *
- * Le composant se téléporte dans <body> : le header est collant avec son
- * propre contexte d'empilement, une modale rendue à l'intérieur passerait
- * dessous.
- *
- * Le parent fournit le contenu et reçoit `close` ; tout le reste (voile,
- * verrou de défilement, Échap, piège à focus, bouton de fermeture) vit ici.
+ * Le composant se téléporte dans <body> : le header est collant avec son propre
+ * contexte d'empilement, une modale rendue à l'intérieur passerait dessous.
  */
 
 const props = defineProps({
@@ -37,11 +30,8 @@ let previouslyFocused = null
 
 const close = () => emit('close')
 
-/*
- * Le fond ne doit pas défiler derrière la feuille. Masquer le débordement fait
- * disparaître la barre de défilement : on compense sa largeur par une marge
- * intérieure, sinon la page (et le header collant) sautent latéralement.
- */
+// Masquer le débordement fait disparaître la barre de défilement : on compense
+// sa largeur, sinon la page (et le header collant) sautent latéralement.
 const lockScroll = () => {
   const scrollbar = window.innerWidth - document.documentElement.clientWidth
   document.body.style.overflow = 'hidden'
@@ -115,14 +105,11 @@ onBeforeUnmount(() => {
       />
     </Transition>
 
-    <!-- La feuille est tirée du bord haut de l'écran, d'où le point d'ancrage
-         en haut et la translation sur toute sa hauteur (voir main.css). -->
     <Transition name="sheet">
       <div
         v-if="open"
         class="pointer-events-none fixed inset-x-0 top-0 z-[100] flex justify-center"
       >
-        <!-- 750px : largeur du gabarit Figma des deux feuilles. -->
         <div
           ref="sheet"
           role="dialog"

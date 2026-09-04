@@ -7,12 +7,8 @@ import quoteAvatar from '@/assets/figma/quote-avatar.png'
 // même temps — et se termine donc largement avant le suivant.
 const INTERVAL = 5000
 
-/*
- * Les quatre témoignages du carrousel.
- * TODO : les noms des auteurs 2 à 4 sont des noms d'attente. Côté `avatar`,
- * seule la photo du premier témoignage est exportée du Figma — les trois
- * autres la reprennent en attendant leurs propres portraits.
- */
+// TODO : noms d'attente pour les auteurs 2 à 4, et une seule photo exportée du
+// Figma — les trois autres la reprennent en attendant leurs portraits.
 const testimonials = [
   {
     quote:
@@ -69,11 +65,9 @@ onBeforeUnmount(stop)
 </script>
 
 <template>
-  <!-- Section citation (Frame 38042) : carrousel de quatre témoignages. -->
   <!-- 192px = 128 (écart entre blocs) + 64 (marge haute du bloc), à partir de xl. -->
   <section id="temoignages" class="shell pt-[80px] md:pt-[128px] xl:pt-[192px]">
     <div class="flex flex-col items-center text-center">
-      <!-- Pastilles de navigation : 8×8, noire pour l'active, grise sinon. -->
       <div v-reveal class="flex items-center gap-[8px]" role="tablist" aria-label="Témoignages">
         <button
           v-for="(testimonial, index) in testimonials"
@@ -88,12 +82,9 @@ onBeforeUnmount(stop)
         />
       </div>
 
-      <!--
-        Les quatre témoignages sont empilés dans la même cellule de grille : la
-        hauteur du bloc reste celle du plus long, donc le fondu enchaîné ne
-        décale jamais la mise en page. Seul l'actif est visible et lisible par
-        les lecteurs d'écran.
-      -->
+      <!-- Les quatre témoignages sont empilés dans la même cellule de grille :
+           la hauteur reste celle du plus long, le fondu ne décale donc jamais
+           la mise en page. Seul l'actif est visible et lu. -->
       <div
         v-reveal="150"
         class="mt-[32px] grid w-full"

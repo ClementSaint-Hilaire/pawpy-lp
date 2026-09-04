@@ -3,7 +3,6 @@ import featureBalade from '@/assets/figma/feature-balade.png'
 import featurePaiement from '@/assets/figma/feature-paiement.png'
 import featureStats from '@/assets/figma/feature-stats.png'
 
-// Icônes fournies avec la maquette (24×24, trait noir à 55 % comme `text-ink-60`).
 import iconCertification from '@/assets/figma/icons/certification.svg'
 import iconFormation from '@/assets/figma/icons/formation.svg'
 import iconMessage from '@/assets/figma/icons/message.svg'
@@ -21,11 +20,7 @@ import iconStats from '@/assets/figma/icons/stats.svg'
 import iconRapports from '@/assets/figma/icons/rapports.svg'
 import iconCanin from '@/assets/figma/icons/canin.svg'
 
-/**
- * Les quatre sections « texte + image » du Figma. Elles partagent la même
- * structure : intitulé, titre, liste à icônes et deux boutons. Seul le côté de
- * l'image alterne (`reversed`).
- */
+// Les quatre sections « texte + image » : seul le côté de l'image alterne.
 export const features = [
   {
     id: 'confiance',

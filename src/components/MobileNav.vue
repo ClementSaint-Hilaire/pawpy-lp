@@ -4,14 +4,9 @@ import { RouterLink, useRoute } from 'vue-router'
 import SheetOverlay from '@/components/SheetOverlay.vue'
 
 /**
- * Menu de navigation sous xl — feuille qui descend du haut de l'écran.
- *
- * Toute la mécanique (voile, animation, verrou de défilement, Échap, piège à
- * focus, bouton de fermeture) vient de SheetOverlay.vue, comme pour le
- * manifeste et l'équipe : rien n'est réimplémenté ici.
- *
- * Contrairement à ces deux feuilles, celle-ci n'est pas pilotée par l'URL —
- * c'est le header qui détient son état, d'où la paire `open` / `close`.
+ * Menu de navigation sous xl. Contrairement aux feuilles du manifeste et de
+ * l'équipe, celle-ci n'est pas pilotée par l'URL : c'est le header qui détient
+ * son état, d'où la paire `open` / `close`.
  */
 
 const props = defineProps({
@@ -25,16 +20,14 @@ const emit = defineEmits(['close'])
 const route = useRoute()
 
 /*
- * « Équipe » et « Manifest » ouvrent leur propre feuille (TeamOverlay,
- * ManifestOverlay). Le verrou de défilement de SheetOverlay écrit directement
- * dans `document.body.style` sans compteur : deux feuilles ouvertes en même
- * temps et la première fermée rendraient le défilement au fond alors que la
- * seconde est encore là. On ferme donc ce menu *avant* de laisser partir la
- * navigation — le clic est synchrone, le routeur asynchrone, l'ordre est donc
- * garanti.
+ * « Équipe » et « Manifest » ouvrent leur propre feuille. Le verrou de
+ * défilement de SheetOverlay écrit dans `document.body.style` sans compteur :
+ * deux feuilles ouvertes et la première fermée rendraient le défilement au
+ * fond alors que la seconde est encore là. On ferme donc ce menu *avant* de
+ * laisser partir la navigation — le clic est synchrone, le routeur asynchrone.
  *
- * Le `watch` ci-dessous n'est qu'un filet : retour arrière du navigateur, lien
- * suivi au clavier, ou toute navigation qui ne passerait pas par le @click.
+ * Le `watch` n'est qu'un filet : retour arrière du navigateur, lien suivi au
+ * clavier, ou toute navigation qui ne passerait pas par le @click.
  */
 watch(() => route.fullPath, () => {
   if (props.open) emit('close')
@@ -62,11 +55,7 @@ watch(() => route.fullPath, () => {
 
       <ul class="flex w-full flex-col items-center gap-[20px]">
         <li v-for="link in links" :key="link.label" class="w-full">
-          <!-- Même sélection de balise que le header : `to` désigne une vraie
-               page, `href` une ancre de l'accueil. Les deux liaisons s'excluent
-               (`v-bind` conditionnel) — un `:href` posé de l'extérieur, même
-               valant `undefined`, écraserait celui que RouterLink calcule et le
-               lien perdrait son URL (clic milieu, « ouvrir dans un onglet »…). -->
+          <!-- Même sélection de balise que le header, cf. TheHeader.vue. -->
           <component
             :is="link.to ? RouterLink : 'a'"
             v-bind="link.to ? { to: link.to } : { href: link.href }"

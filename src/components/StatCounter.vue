@@ -3,15 +3,16 @@
  * Compteur animé des chiffres clés.
  *
  *   • à l'entrée de la section, la valeur grimpe de 0 jusqu'à sa cible ;
- *   • ensuite, si `live`, elle repart de temps en temps de quelques unités,
- *     à intervalle aléatoire, pour donner l'impression d'un chiffre vivant ;
+ *   • ensuite, si `live`, elle repart de quelques unités à intervalle
+ *     aléatoire, pour donner l'impression d'un chiffre vivant ;
  *   • l'écart accumulé est conservé dans le localStorage : au rechargement, le
- *     visiteur retrouve le compteur là où il l'avait laissé (et repart de là).
+ *     visiteur retrouve le compteur là où il l'avait laissé.
  *
  * `prefers-reduced-motion` coupe les transitions : les valeurs changent d'un
  * coup, sans décompte ni sursaut.
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { observeOnce, prefersReducedMotion } from '@/utils/motion'
 
 const props = defineProps({
   // Valeur de base telle qu'affichée dans la maquette, zéros de tête compris.
@@ -39,27 +40,28 @@ const ticking = ref(false)
 
 const label = computed(() => String(displayed.value).padStart(pad, '0'))
 
-const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
 const random = (min, max) => min + Math.floor(Math.random() * (max - min + 1))
 
 // Le localStorage peut être indisponible (mode privé, cookies bloqués) :
-// toute lecture/écriture échoue en silence, le compteur repart simplement de 0.
+// toute lecture/écriture échoue en silence, le compteur repart alors de 0.
+const readStore = () => {
+  try {
+    return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}')
+  } catch {
+    return {}
+  }
+}
+
 const readDrift = () => {
   if (!props.storageKey) return 0
-  try {
-    const store = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}')
-    const saved = Number(store[props.storageKey])
-    return Number.isFinite(saved) ? Math.min(Math.max(saved, 0), MAX_DRIFT) : 0
-  } catch {
-    return 0
-  }
+  const saved = Number(readStore()[props.storageKey])
+  return Number.isFinite(saved) ? Math.min(Math.max(saved, 0), MAX_DRIFT) : 0
 }
 
 const writeDrift = () => {
   if (!props.storageKey) return
   try {
-    const store = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}')
+    const store = readStore()
     store[props.storageKey] = drift.value
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
   } catch {
@@ -70,12 +72,12 @@ const writeDrift = () => {
 let frame = 0
 let timer = 0
 let pulse = 0
-let observer = null
+let stopObserving = null
 
 const animateTo = (to, duration) => {
   const from = displayed.value
 
-  if (reducedMotion() || from === to) {
+  if (prefersReducedMotion() || from === to) {
     displayed.value = to
     return
   }
@@ -113,38 +115,24 @@ const scheduleTick = () => {
   }, random(...TICK_DELAY))
 }
 
-const start = () => {
-  animateTo(base + drift.value, COUNT_UP_DURATION)
-  if (props.live) timer = window.setTimeout(scheduleTick, COUNT_UP_DURATION)
-}
-
 onMounted(() => {
   if (props.live) drift.value = readDrift()
 
-  if (!('IntersectionObserver' in window)) {
-    start()
-    return
-  }
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return
-        observer.unobserve(entry.target)
-        start()
-      })
+  stopObserving = observeOnce(
+    el.value,
+    () => {
+      animateTo(base + drift.value, COUNT_UP_DURATION)
+      if (props.live) timer = window.setTimeout(scheduleTick, COUNT_UP_DURATION)
     },
     { threshold: 0.4 },
   )
-
-  observer.observe(el.value)
 })
 
 onBeforeUnmount(() => {
   window.cancelAnimationFrame(frame)
   window.clearTimeout(timer)
   window.clearTimeout(pulse)
-  observer?.disconnect()
+  stopObserving?.()
 })
 </script>
 
@@ -157,6 +145,6 @@ onBeforeUnmount(() => {
   >
     {{ label }}
   </span>
-  <!-- Le lecteur d'écran reçoit la valeur finale, pas le décompte. -->
+  <!-- Le lecteur d'écran reçoit la valeur, pas le décompte. -->
   <span class="sr-only">{{ label }}</span>
 </template>

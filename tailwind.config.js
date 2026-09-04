@@ -42,17 +42,15 @@ export default {
         body: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
 
-      // Typeramp Figma. Les letterSpacing du Figma (-1, -2) sont des pourcentages.
-      //
-      // Les quatre gros calibres sont fluides : la borne haute est la valeur du
-      // Figma, la borne basse ce qui reste lisible à 320px. Régler l'échelle ici
-      // évite d'écrire des paires responsive sur chaque titre de chaque section.
+      // Les quatre gros calibres sont fluides : borne haute = valeur du Figma,
+      // borne basse = ce qui reste lisible à 320px. Régler l'échelle ici évite
+      // d'écrire des paires responsive sur chaque titre.
       //
       // Les coefficients `vw` sont choisis pour que la borne haute soit atteinte
       // *avant* le point de bascule desktop (xl, 1280px) : lead à 1125px, title
-      // à 1000px, display à 1040px, numeral à 1253px. Un coefficient plus faible
-      // laisserait le texte encore en train de grandir sur un écran de bureau,
-      // et les blocs calés au pixel sur la maquette n'auraient plus leur taille.
+      // à 1000px, display à 1040px, numeral à 1253px. Plus faibles, le texte
+      // grandirait encore sur un écran de bureau et les blocs calés au pixel sur
+      // la maquette n'auraient plus leur taille.
       fontSize: {
         caption: ['11px', { lineHeight: '1.1' }],                              // font/size/xs
         label: ['14px', { lineHeight: '20px' }],                               // Subbody
@@ -64,13 +62,9 @@ export default {
       },
 
       maxWidth: {
-        // Gabarit du Figma : page 1500px, contenu 1300px, gouttières de 100px.
-        //
-        // La borne porte sur l'extérieur du gabarit, gouttières comprises
-        // (`box-sizing: border-box` fait entrer le padding dans `max-width`) :
-        // 1400 = 1300 de contenu + 2 × 50 de gouttière. C'est ce qui rend le
-        // contenu large d'exactement 1300px dès 1400px de viewport, comme dans
-        // la maquette. Voir `.shell` dans main.css.
+        // Gouttières comprises (`box-sizing: border-box` fait entrer le padding
+        // dans `max-width`) : 1400 = 1300 de contenu + 2 × 50 de gouttière.
+        // Voir `.shell` dans main.css.
         shell: '1400px',
       },
 

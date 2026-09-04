@@ -18,8 +18,8 @@ import { features } from '@/data/features'
     <QuoteSection />
     <StatsSection />
 
-    <!-- Cible de l'ancre « Features » : les FeatureSection sont générées en
-         boucle, l'id vit donc sur le conteneur plutôt que dans le composant. -->
+    <!-- Cible de l'ancre « Features » : les sections étant générées en boucle,
+         l'id vit sur le conteneur plutôt que dans le composant. -->
     <div id="features">
       <FeatureSection
         v-for="feature in features"
