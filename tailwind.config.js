@@ -25,15 +25,11 @@ export default {
         accent: '#ffccfb',  // brand/accent-500 — surlignage
         stroke: '#77777780', // stroke/primary
 
-        // Conservé : Confirmation.vue et Unsubscribe.vue s'appuient encore dessus.
-        monochrome: {
-          100: '#ffffff',
-          200: '#f5f5f7',
-          400: '#dddddd',
-          500: '#777777',
-          800: '#252826',
-          900: '#000000',
-        },
+        // Hors Figma : la maquette ne décrit aucun état d'erreur, mais les vues
+        // de confirmation et de désinscription en ont besoin (échec d'appel au
+        // backend, lien invalide). Un seul rouge, ici, plutôt que le `red-600`
+        // de la palette Tailwind dispersé dans les gabarits.
+        danger: '#b3261e',
       },
 
       fontFamily: {
@@ -47,19 +43,35 @@ export default {
       },
 
       // Typeramp Figma. Les letterSpacing du Figma (-1, -2) sont des pourcentages.
+      //
+      // Les quatre gros calibres sont fluides : la borne haute est la valeur du
+      // Figma, la borne basse ce qui reste lisible à 320px. Régler l'échelle ici
+      // évite d'écrire des paires responsive sur chaque titre de chaque section.
+      //
+      // Les coefficients `vw` sont choisis pour que la borne haute soit atteinte
+      // *avant* le point de bascule desktop (xl, 1280px) : lead à 1125px, title
+      // à 1000px, display à 1040px, numeral à 1253px. Un coefficient plus faible
+      // laisserait le texte encore en train de grandir sur un écran de bureau,
+      // et les blocs calés au pixel sur la maquette n'auraient plus leur taille.
       fontSize: {
         caption: ['11px', { lineHeight: '1.1' }],                              // font/size/xs
         label: ['14px', { lineHeight: '20px' }],                               // Subbody
         base: ['16px', { lineHeight: '22px' }],                                // Body
-        lead: ['18px', { lineHeight: '1.2', letterSpacing: '-0.01em' }],       // font/size/m
-        title: ['34px', { lineHeight: '1.2', letterSpacing: '-0.02em' }],      // font/size/2xl
-        display: ['54px', { lineHeight: '1.2', letterSpacing: '-0.02em' }],                           // font/size/4xl
-        numeral: ['94px', { lineHeight: '1.2', letterSpacing: '-0.02em' }],    // chiffres des stats
+        lead: ['clamp(16px, 1.6vw, 18px)', { lineHeight: '1.2', letterSpacing: '-0.01em' }],  // font/size/m
+        title: ['clamp(24px, 3.4vw, 34px)', { lineHeight: '1.2', letterSpacing: '-0.02em' }], // font/size/2xl
+        display: ['clamp(32px, 5.2vw, 54px)', { lineHeight: '1.2', letterSpacing: '-0.02em' }], // font/size/4xl
+        numeral: ['clamp(40px, 7.5vw, 94px)', { lineHeight: '1.2', letterSpacing: '-0.02em' }], // chiffres des stats
       },
 
       maxWidth: {
         // Gabarit du Figma : page 1500px, contenu 1300px, gouttières de 100px.
-        shell: '1300px',
+        //
+        // La borne porte sur l'extérieur du gabarit, gouttières comprises
+        // (`box-sizing: border-box` fait entrer le padding dans `max-width`) :
+        // 1400 = 1300 de contenu + 2 × 50 de gouttière. C'est ce qui rend le
+        // contenu large d'exactement 1300px dès 1400px de viewport, comme dans
+        // la maquette. Voir `.shell` dans main.css.
+        shell: '1400px',
       },
 
       boxShadow: {

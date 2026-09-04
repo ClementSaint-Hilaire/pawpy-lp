@@ -32,18 +32,24 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="scroll-mt-24 mx-auto max-w-7xl px-4 mt-44 sm:px-6 lg:px-8 py-8 md:py-0">
-    <div v-if="loading">
+  <!-- Cette vue est servie seule (pas de header ni de footer) : la marge haute
+       remplace la hauteur de l'en-tête. -->
+  <div class="shell mt-[96px] pb-[64px] text-center xl:mt-[176px]">
+    <p v-if="loading" class="font-sans text-base text-ink-60">
       Confirmation en cours...
-    </div>
-    <div v-else-if="error" class="text-red-600">
+    </p>
+
+    <p v-else-if="error" class="font-sans text-base text-danger">
       {{ error }}
-    </div>
-    <div v-else class="text-center">
-      <h1 class="text-lg md:text-3xl text-monochrome-900 mb-4 text-center">
-        Merci pour votre soutien ! Vous recevrez toutes nos informations sur votre mail : {{email}} !
+    </p>
+
+    <div v-else class="mx-auto max-w-[682px]">
+      <h1 class="text-title [word-break:break-word]">
+        Merci pour votre soutien ! Vous recevrez toutes nos informations sur votre mail : {{ email }} !
       </h1>
-      <h2 class="text-lg md:text-lg text-monochrome-900 mb-4 text-center">Vous pouvez maintenant fermer cette page</h2>
+      <p class="mt-[16px] font-sans text-label text-ink-60">
+        Vous pouvez maintenant fermer cette page
+      </p>
     </div>
   </div>
 </template>

@@ -36,18 +36,24 @@ const badges = [
             :key="index"
             :src="avatar"
             alt=""
-            class="avatar-bob h-[32px] w-[32px] rounded-full object-cover"
+            class="avatar-bob h-[32px] w-[32px] shrink-0 rounded-full object-cover"
             :class="[index > 0 ? '-ml-[12px]' : '', `avatar-bob-${index + 1}`]"
           />
         </div>
         <span class="font-sans text-label text-ink-60">Communautée certifiée</span>
       </div>
 
-      <!-- Les retours à la ligne sont ceux de la maquette : pas de largeur maximale,
-           sinon la police de repli, plus large que Coconat, ajoute une troisième ligne. -->
-      <h1 v-reveal="100" class="mt-[32px] text-display font-normal uppercase">
-        Votre chic à du chien.<br />
-        Et si votre chien avait du chic ?
+      <!-- Le retour à la ligne est celui de la maquette : au-delà de xl, pas de
+           largeur maximale, sinon la police de repli, plus large que Coconat,
+           ajoute une troisième ligne. En dessous, le <br> est neutralisé
+           (`display: none` sur un <br> supprime le saut) et le titre se coupe
+           tout seul là où la largeur l'impose. -->
+      <h1 v-reveal="100" class="mt-[24px] text-display font-normal uppercase xl:mt-[32px]">
+        Votre chic à du chien.<br class="hidden xl:inline" />
+        <!-- Espace insécable avant le « ? » : usage typographique français, et
+             elle évite que le signe se retrouve seul sur une ligne une fois le
+             titre replié sur un écran étroit. -->
+        Et si votre chien avait du chic&nbsp;?
       </h1>
 
       <p v-reveal="200" class="mt-[12px] max-w-[682px] text-base text-ink-60">
@@ -55,8 +61,14 @@ const badges = [
         Confiance, transparence, sécurité, tout est pensé pour le bien être de votre chiens.
       </p>
 
-      <!-- inline-grid + colonnes 1fr : les deux boutons prennent la largeur du plus large. -->
-      <div v-reveal="300" class="mt-[76px] inline-grid grid-cols-2 items-center gap-[24px]">
+      <!-- Deux boutons `lg` de 43px de marge latérale ne tiennent pas côte à côte
+           sur un téléphone : ils s'empilent en pleine largeur, puis reprennent
+           la grille de la maquette à partir de sm (colonnes 1fr : les deux
+           prennent la largeur du plus large). -->
+      <div
+        v-reveal="300"
+        class="mt-[40px] grid w-full grid-cols-1 items-center gap-[12px] sm:w-auto sm:grid-cols-2 sm:gap-[24px] xl:mt-[76px]"
+      >
         <BaseButton size="lg" href="mailto:contact@pawpy.fr?subject=demande%20de%20beta%20test">Rejoindre la beta</BaseButton>
         <BaseButton
           size="lg"
@@ -71,36 +83,49 @@ const badges = [
     <!--
       Composition du Figma (Frame 3, 1300×800) : mockup au centre, chien au trait
       à droite, pastilles de certification en bas à gauche. Les coordonnées sont
-      celles de la maquette, mesurées sur son rendu.
+      celles de la maquette, mesurées sur son rendu — elles ne valent qu'à partir
+      de xl, où la scène retrouve ses 1300×800.
 
       L'ordre du DOM porte la mise en scène : le chien et les badges sont écrits
       avant le mockup, donc empilés dessous. Ils démarrent leur apparition cachés
-      derrière lui (`--reveal-shift`) et en ressortent, le chien vers la droite,
-      les badges vers la gauche l'un après l'autre.
+      derrière lui (`--reveal-shift`, cf. les classes `hero-shift-*` de main.css)
+      et en ressortent, le chien vers la droite, les badges vers la gauche l'un
+      après l'autre.
+
+      Sous xl la scène repasse en flux vertical : le mockup remonte en tête
+      (`order`, l'ordre du DOM restant celui de l'empilement desktop), les
+      pastilles se rangent dessous en ligne repliable, et le chien — qui n'a de
+      sens qu'à droite du mockup — est masqué. Les mêmes nœuds servent aux deux
+      mises en page : dupliquer le bloc laisserait la version cachée en
+      `display: none`, où l'IntersectionObserver de `v-reveal` ne se déclenche
+      jamais et l'élément resterait à `opacity: 0`.
     -->
-    <div class="relative mx-auto mt-[64px] h-[800px] w-[1300px] max-w-full">
+    <div
+      class="mt-[40px] flex flex-col items-center gap-[24px] xl:relative xl:mx-auto xl:mt-[64px] xl:block xl:h-[800px] xl:w-[1300px] xl:max-w-full"
+    >
       <img
         v-reveal="{ delay: 560, from: 'left' }"
-        style="--reveal-shift: 320px"
         :src="heroDog"
         alt=""
-        class="pointer-events-none absolute left-[813px] top-[116px] w-[290px] max-w-none"
+        class="hero-shift-dog pointer-events-none hidden xl:absolute xl:left-[813px] xl:top-[116px] xl:block xl:w-[290px] xl:max-w-none"
       />
 
       <!-- Position de la maquette (bloc de pastilles à 235;472) corrigée du
            débord que la rotation ajoute autour de chaque pastille. L'espacement
            reconstitue le pas de 58px entre deux pastilles. -->
-      <ul class="absolute left-[237px] top-[482px] space-y-[12px]">
+      <ul
+        class="order-2 flex flex-wrap items-center justify-center gap-[8px] xl:absolute xl:left-[237px] xl:top-[482px] xl:order-none xl:block xl:space-y-[12px]"
+      >
         <li
           v-for="(badge, index) in badges"
           :key="badge.label"
           v-reveal="{ delay: 700 + index * 110, from: 'right' }"
-          style="--reveal-shift: 260px"
+          class="hero-shift-badge"
         >
           <!-- La rotation vit sur un enfant : la directive remet `transform` à
                `none` en fin d'apparition et l'effacerait sinon. -->
           <div
-            class="inline-flex rotate-[-8deg] items-center gap-[8px] rounded-full bg-surface-muted p-[12px]"
+            class="inline-flex rotate-[-8deg] items-center gap-[8px] rounded-full bg-surface-muted p-[8px] sm:p-[12px]"
           >
             <img :src="badge.icon" alt="" class="h-[20px] w-[20px] shrink-0" />
             <span class="whitespace-nowrap font-display text-lead uppercase tracking-[-0.36px]">
@@ -114,7 +139,7 @@ const badges = [
         v-reveal="{ delay: 400, from: 'scale' }"
         :src="heroPhone"
         alt="L’application Pawpy : promenade en cours, profil du promeneur et formations"
-        class="phone-shadow absolute left-[453px] top-0 w-[389px] max-w-none"
+        class="phone-shadow order-1 w-[240px] sm:w-[300px] xl:absolute xl:left-[453px] xl:top-0 xl:order-none xl:w-[389px] xl:max-w-none"
       />
     </div>
   </section>

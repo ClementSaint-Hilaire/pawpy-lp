@@ -12,27 +12,27 @@ import iconMinus from '@/assets/figma/icons/minus.svg'
  */
 const items = [
   {
-    question: 'Qu’est-ce que Pawpy ?',
+    question: 'Qu’est-ce que Pawpy ?',
     answer:
       'Anomi est une application qui met en relation les propriétaires de chiens avec des promeneurs certifiés et qualifiés, spécialisés dans le bien-être animal. Notre priorité est de garantir des sorties sécurisées, adaptées aus spécificités de chaque chien.',
   },
   {
-    question: 'Quelles infos fournir sur mon chien ?',
+    question: 'Quelles infos fournir sur mon chien ?',
     answer:
       'Pawpy vous demande quelques informations essentielles sur votre compagnon : son âge, ses habitudes, ou encore ses besoins spécifiques. Plus vous êtes précis, plus l’expérience sera personnalisée et agréable pour votre chien.',
   },
   {
-    question: 'Puis‑je rencontrer le promeneur avant ?',
+    question: 'Puis‑je rencontrer le promeneur avant ?',
     answer:
       'Avant de confier votre animal, vous avez la possibilité de rencontrer le promeneur, donnez vous rendez-vous et laisser la magie opérer.',
   },
   {
-    question: 'Comment sont fixés les prix ?',
+    question: 'Comment sont fixés les prix ?',
     answer:
       'Ce sont les propriétaires eux-mêmes qui fixent le tarif qu’ils jugent juste pour la promenade de leur chien. Ils choisissent le montant en fonction de la durée souhaitée, des besoins spécifiques de leur chien. Le prix apparaît toujours clairement avant validation, sans frais cachés ni surprise. Le promeneur à également la possibilité de fixer son tarif à titre indicatif directement sur son profil.',
   },
   {
-    question: 'Puis‑je refuser une promenade ?',
+    question: 'Puis‑je refuser une promenade ?',
     answer:
       'Vous pouvez refuser une promenade à tout moment tant qu’elle n’est pas confirmée, ou choisir un autre promeneur si vous préférez. Vous gardez le contrôle tout en offrant à votre chien le meilleur accompagnement possible pour une promenade personnalisée.',
   },
@@ -46,24 +46,37 @@ const toggle = (index) => {
 </script>
 
 <template>
-  <!-- La FAQ est le seul bloc à utiliser une colonne de 1000px, pas le gabarit de 1300px. -->
-  <section id="faq" class="mx-auto w-full max-w-[1000px] px-6 pt-[286px] lg:px-0">
-    <div class="flex items-start justify-between gap-[32px]">
+  <!-- La FAQ est le seul bloc à utiliser une colonne de 1000px, pas le gabarit
+       de 1300px. Les gouttières suivent l'échelle de `.shell` en dessous de xl ;
+       au-delà elles sont inutiles — une colonne de 1000px ne touche jamais les
+       bords d'un viewport de 1280px — et les retirer garde la largeur de la
+       maquette (le padding entrerait sinon dans le `max-w`). -->
+  <section
+    id="faq"
+    class="mx-auto w-full max-w-[1000px] px-6 pt-[96px] md:px-10 md:pt-[160px] xl:px-0 xl:pt-[286px]"
+  >
+    <div class="flex flex-col gap-[8px] lg:flex-row lg:items-start lg:justify-between lg:gap-[32px]">
       <h2 v-reveal class="max-w-[500px] text-title">
-        Vous avez une question ?<br />
-        Nous avons la réponse !
+        Vous avez une question ?<br class="hidden lg:inline" />
+        Nous avons la réponse !
       </h2>
-      <a v-reveal="120" href="#newsletter" class="mt-[49px] font-sans text-label text-ink-40 hover:text-ink">
+      <!-- Le décalage de 49px aligne le lien sur la seconde ligne du titre :
+           il n'a de sens que lorsque les deux sont sur la même rangée. -->
+      <a
+        v-reveal="120"
+        href="#newsletter"
+        class="font-sans text-label text-ink-40 hover:text-ink lg:mt-[49px]"
+      >
         Poser une question
       </a>
     </div>
 
-    <div class="mt-[64px] flex items-start gap-[32px]">
+    <div class="mt-[40px] flex flex-col gap-[24px] lg:mt-[64px] lg:flex-row lg:items-start lg:gap-[32px]">
       <img
         v-reveal="{ from: 'scale' }"
         :src="faqImage"
         alt=""
-        class="h-[443px] w-[400px] shrink-0 object-cover" />
+        class="h-[240px] w-full object-cover md:h-[320px] lg:h-[443px] lg:w-[400px] lg:shrink-0" />
 
       <dl class="flex-1">
         <div
@@ -90,9 +103,14 @@ const toggle = (index) => {
             </button>
           </dt>
 
+          <!-- `max-h` sert de borne haute à la transition, pas de hauteur cible :
+               elle doit rester au-dessus de la plus longue réponse une fois
+               reflowée en colonne étroite (« Comment sont fixés les prix ? »
+               dépasse largement 400px à 320px de large), sans quoi le texte est
+               rogné. -->
           <dd
             class="overflow-hidden transition-all duration-300 ease-in-out"
-            :class="openIndex === index ? 'max-h-[400px] pb-[16px] opacity-100' : 'max-h-0 opacity-0'"
+            :class="openIndex === index ? 'max-h-[700px] pb-[16px] opacity-100' : 'max-h-0 opacity-0'"
           >
             <p class="font-sans text-label text-ink-60">{{ item.answer }}</p>
           </dd>

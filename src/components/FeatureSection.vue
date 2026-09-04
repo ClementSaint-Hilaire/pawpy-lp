@@ -17,11 +17,13 @@ defineProps({
 </script>
 
 <template>
-  <!-- 320px = 64 (marge basse du bloc précédent) + 128 (écart) + 128 (retrait haut du texte). -->
-  <section class="shell pt-[320px]">
-    <div class="flex items-center gap-[64px]">
-      <!-- Colonne texte -->
-      <div v-reveal class="flex-1" :class="reversed ? 'order-2' : 'order-1'">
+  <!-- 320px = 64 (marge basse du bloc précédent) + 128 (écart) + 128 (retrait haut du texte), à partir de xl. -->
+  <section class="shell pt-[100px] md:pt-[180px] xl:pt-[320px]">
+    <div class="flex flex-col gap-[32px] lg:flex-row lg:items-center lg:gap-[64px]">
+      <!-- Colonne texte. L'alternance gauche/droite de `reversed` n'a de sens
+           qu'en deux colonnes : en dessous de lg l'ordre du DOM reprend la main,
+           et les quatre blocs présentent le texte puis l'image. -->
+      <div v-reveal class="flex-1" :class="reversed ? 'lg:order-2' : 'lg:order-1'">
         <p class="eyebrow">{{ eyebrow }}</p>
 
         <h2 class="mt-[16px] whitespace-pre-line text-title">{{ title }}</h2>
@@ -39,7 +41,9 @@ defineProps({
           </li>
         </ul>
 
-        <div class="mt-[64px] flex items-center gap-[24px]">
+        <div
+          class="mt-[32px] flex flex-col items-stretch gap-[12px] sm:flex-row sm:items-center sm:gap-[24px] xl:mt-[64px]"
+        >
           <BaseButton href="mailto:contact@pawpy.fr?subject=demande%20de%20beta%20test">Rejoindre la beta</BaseButton>
           <BaseButton variant="outline" href="#newsletter">Suivre le projet</BaseButton>
         </div>
@@ -49,7 +53,7 @@ defineProps({
       <div
         v-reveal="{ delay: 150, from: 'scale' }"
         class="flex-1"
-        :class="reversed ? 'order-1' : 'order-2'"
+        :class="reversed ? 'lg:order-1' : 'lg:order-2'"
       >
         <img
           :src="image"

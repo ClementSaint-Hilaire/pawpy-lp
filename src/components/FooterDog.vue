@@ -93,6 +93,18 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- v-html sans risque : le SVG est un fichier local, inliné à la compilation. -->
-  <div ref="root" aria-hidden="true" class="h-[398px] w-[272px] shrink-0" v-html="footerDogSvg" />
+  <!--
+    v-html sans risque : le SVG est un fichier local, inliné à la compilation.
+
+    La boîte se réduit par paliers ; `.footer-dog` (main.css) neutralise les
+    attributs `width`/`height` du SVG exporté pour qu'il la remplisse. Le
+    `stroke-width` du tracé étant exprimé dans les unités du viewBox, le trait
+    s'amincit proportionnellement — c'est bien le rendu voulu.
+  -->
+  <div
+    ref="root"
+    aria-hidden="true"
+    class="footer-dog h-[240px] w-[164px] shrink-0 md:h-[320px] md:w-[219px] xl:h-[398px] xl:w-[272px]"
+    v-html="footerDogSvg"
+  />
 </template>

@@ -70,8 +70,8 @@ onBeforeUnmount(stop)
 
 <template>
   <!-- Section citation (Frame 38042) : carrousel de quatre témoignages. -->
-  <!-- 192px = 128 (écart entre blocs) + 64 (marge haute du bloc). -->
-  <section id="temoignages" class="shell pt-[192px]">
+  <!-- 192px = 128 (écart entre blocs) + 64 (marge haute du bloc), à partir de xl. -->
+  <section id="temoignages" class="shell pt-[80px] md:pt-[128px] xl:pt-[192px]">
     <div class="flex flex-col items-center text-center">
       <!-- Pastilles de navigation : 8×8, noire pour l'active, grise sinon. -->
       <div v-reveal class="flex items-center gap-[8px]" role="tablist" aria-label="Témoignages">
@@ -113,7 +113,7 @@ onBeforeUnmount(stop)
           </blockquote>
 
           <figcaption class="mt-[32px] flex items-center gap-[8px]">
-            <img :src="testimonial.avatar" alt="" class="h-[64px] w-[44px] object-cover" />
+            <img :src="testimonial.avatar" alt="" class="h-[64px] w-[44px] shrink-0 object-cover" />
             <span class="font-sans text-label text-ink-60">—{{ testimonial.author }}</span>
           </figcaption>
         </figure>

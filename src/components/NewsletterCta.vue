@@ -37,10 +37,10 @@ onBeforeUnmount(() => {
 
 <template>
   <!-- 158px : le bloc gris porte lui-même 94px de marge haute (voir py ci-dessous). -->
-  <section id="newsletter" class="shell pt-[158px]">
+  <section id="newsletter" class="shell pt-[80px] md:pt-[120px] xl:pt-[158px]">
     <div
       v-reveal.fade
-      class="relative flex min-h-[418px] items-center overflow-hidden bg-surface-muted px-[128px] py-[94px]"
+      class="relative flex items-center overflow-hidden bg-surface-muted px-6 py-[40px] md:px-[48px] md:py-[64px] xl:min-h-[418px] xl:px-[128px] xl:py-[94px]"
     >
       <div v-reveal="120" class="relative z-10 max-w-[490px]">
         <h2 class="text-title">Offrez la première classe à votre chien.</h2>
@@ -62,12 +62,15 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- Illustration au trait. L'export reprend déjà le recadrage du Figma
-           (374×418, l'image d'origine débordant du bloc) : à poser tel quel. -->
+           (374×418, l'image d'origine débordant du bloc) : à poser tel quel.
+           Sa position est celle du bloc de 1300px ; sous xl elle tomberait
+           entièrement hors cadre (le parent la rognerait sans rien laisser
+           voir), donc on la retire explicitement. -->
       <img
         v-reveal="{ delay: 280, from: 'right' }"
         :src="ctaPaw"
         alt=""
-        class="pointer-events-none absolute left-[823px] top-0 w-[374px] max-w-none"
+        class="pointer-events-none hidden xl:absolute xl:left-[823px] xl:top-0 xl:block xl:w-[374px] xl:max-w-none"
       />
     </div>
   </section>

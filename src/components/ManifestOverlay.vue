@@ -37,7 +37,7 @@ const close = () => {
     close-label="Fermer le manifest"
     @close="close"
   >
-    <div class="flex w-full flex-col items-center gap-[32px] px-[34px] text-center [word-break:break-word]">
+    <div class="flex w-full flex-col items-center gap-[32px] px-6 text-center [word-break:break-word] md:px-[34px]">
       <p
         id="manifest-title"
         class="font-sans text-[14px] leading-[1.2] tracking-[-0.01em] text-ink-60"
@@ -45,9 +45,10 @@ const close = () => {
         Notre manifest
       </p>
 
-      <!-- 29px / 1,2 : l'écart entre paragraphes vaut une ligne vide. -->
+      <!-- 29px / 1,2 : l'écart entre paragraphes vaut une ligne vide (et suit
+           donc la taille du texte quand celle-ci se réduit). -->
       <div
-        class="flex w-full max-w-[682px] flex-col gap-[35px] font-display text-[29px] font-normal leading-[1.2] tracking-[-0.02em] text-ink"
+        class="flex w-full max-w-[682px] flex-col gap-[24px] font-display text-[22px] font-normal leading-[1.2] tracking-[-0.02em] text-ink md:gap-[35px] md:text-[29px]"
         style="font-feature-settings: 'case' 1"
       >
         <p v-for="paragraph in paragraphs" :key="paragraph">{{ paragraph }}</p>

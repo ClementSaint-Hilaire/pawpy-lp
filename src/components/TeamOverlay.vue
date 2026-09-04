@@ -29,7 +29,7 @@ const close = () => {
     close-label="Fermer la présentation de l’équipe"
     @close="close"
   >
-    <div class="flex w-full flex-col items-center gap-[32px] px-[34px] text-center [word-break:break-word]">
+    <div class="flex w-full flex-col items-center gap-[32px] px-6 text-center [word-break:break-word] md:px-[34px]">
       <p
         id="team-title"
         class="font-sans text-[14px] leading-[1.2] tracking-[-0.01em] text-ink-60"
@@ -40,11 +40,11 @@ const close = () => {
       <!-- 648px = 3 portraits de 200px et 2 gouttières de 24px : la quatrième
            carte passe à la ligne d'elle-même, et `justify-center` recentre la
            seconde ligne comme dans la maquette. -->
-      <ul class="flex w-full max-w-[648px] flex-wrap items-start justify-center gap-[24px]">
+      <ul class="flex w-full max-w-[648px] flex-wrap items-start justify-center gap-[16px] sm:gap-[24px]">
         <li
           v-for="member in team"
           :key="member.name"
-          class="portrait-card flex w-[200px] shrink-0 flex-col items-center gap-[8px]"
+          class="portrait-card flex w-[140px] shrink-0 flex-col items-center gap-[8px] sm:w-[200px]"
         >
           <!-- Cadre fixe 200×240 : les portraits n'ont pas tous le même format,
                `object-cover` les recadre depuis le centre comme le fait Figma.
@@ -62,7 +62,7 @@ const close = () => {
             <img
               :src="member.photo"
               :alt="member.name"
-              class="portrait-tilt h-[240px] w-full object-cover"
+              class="portrait-tilt h-[168px] w-full object-cover sm:h-[240px]"
               loading="lazy"
               decoding="async"
             />

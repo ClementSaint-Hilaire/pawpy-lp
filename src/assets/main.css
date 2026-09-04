@@ -29,12 +29,24 @@
 @layer base {
     body {
         @apply bg-surface text-ink font-body antialiased;
+
+        /*
+         * Filet de sécurité : aucun débordement latéral ne doit se transformer
+         * en défilement horizontal de la page — en particulier les glissements
+         * de `v-reveal`, qui translatent de plusieurs centaines de pixels dans
+         * le hero avant de revenir en place.
+         *
+         * `clip` et non `hidden` : `overflow-x: hidden` ferait du body un
+         * conteneur de défilement, ce qui casserait le `position: sticky` du
+         * header.
+         */
+        overflow-x: clip;
     }
 
     /*
-     * Navigation par ancres : défilement doux, et décalage de 102 px (hauteur
-     * du header collant) pour que le haut de la section visée ne passe pas
-     * dessous. Respecte « réduire les animations ».
+     * Navigation par ancres : défilement doux, et décalage de la hauteur du
+     * header collant pour que le haut de la section visée ne passe pas dessous.
+     * Respecte « réduire les animations ».
      */
     html {
         scroll-behavior: smooth;
@@ -46,8 +58,15 @@
         }
     }
 
+    /* Solidaire des hauteurs de header : 64/80px avant xl, 102px au-delà. */
     :target {
-        scroll-margin-top: 102px;
+        scroll-margin-top: 80px;
+    }
+
+    @media (min-width: 1280px) {
+        :target {
+            scroll-margin-top: 102px;
+        }
     }
 
     h1, h2, h3 {
@@ -58,9 +77,16 @@
 }
 
 @layer components {
-    /* Gabarit du Figma : contenu de 1300px centré dans une page de 1500px. */
+    /*
+     * Gabarit du Figma : contenu de 1300px centré dans une page de 1500px.
+     *
+     * Les gouttières s'élargissent par paliers. `max-w-shell` vaut 1400px —
+     * gouttières comprises, cf. tailwind.config.js — si bien qu'à partir de
+     * 1400px de viewport le contenu fait exactement les 1300px de la maquette,
+     * et qu'en dessous il ne touche jamais les bords.
+     */
     .shell {
-        @apply mx-auto w-full max-w-shell px-6 lg:px-0;
+        @apply mx-auto w-full max-w-shell px-6 md:px-10 xl:px-[50px];
     }
 
     /* Intitulé de section en gris clair (« Confiance », « Balade »…). */
@@ -106,6 +132,32 @@
             drop-shadow(80px 108px 65px rgba(166, 166, 166, 0.05))
             drop-shadow(100px 193px 77px rgba(166, 166, 166, 0.01));
     }
+
+    /*
+     * Les couches ci-dessus sont calibrées sur le mockup de 389px de la
+     * maquette. Sous xl le mockup tombe à 240–300px : les offsets sont réduits
+     * dans les mêmes proportions, sinon l'ombre déborde largement du téléphone.
+     */
+    @media (max-width: 1279px) {
+        .phone-shadow {
+            filter:
+                drop-shadow(5px 7px 16px rgba(166, 166, 166, 0.1))
+                drop-shadow(18px 29px 29px rgba(166, 166, 166, 0.09))
+                drop-shadow(48px 65px 39px rgba(166, 166, 166, 0.05))
+                drop-shadow(60px 116px 46px rgba(166, 166, 166, 0.01));
+        }
+    }
+
+    /*
+     * Le chien du footer est injecté par `v-html` (FooterDog.vue) : le SVG
+     * porte ses propres attributs `width`/`height`, qu'il faut neutraliser pour
+     * qu'il suive la boîte responsive de son conteneur.
+     */
+    .footer-dog > svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 /*
@@ -131,7 +183,20 @@
  * `--reveal-shift` règle la longueur du glissement horizontal, 32px par
  * défaut. Le hero la pousse à plusieurs centaines de pixels : le chien et les
  * badges y démarrent cachés derrière le mockup et en sortent en glissant.
+ *
+ * Ces amplitudes n'ont de sens que dans la scène absolue de 1300px : sous xl le
+ * hero repasse en flux vertical, le mockup ne cache plus rien, et un glissement
+ * de 320px partirait hors de l'écran. D'où deux classes plutôt qu'un `style`
+ * en ligne, qu'aucune règle responsive n'aurait pu surcharger.
  */
+.hero-shift-dog,
+.hero-shift-badge { --reveal-shift: 32px; }
+
+@media (min-width: 1280px) {
+    .hero-shift-dog   { --reveal-shift: 320px; }
+    .hero-shift-badge { --reveal-shift: 260px; }
+}
+
 .reveal-up    { transform: translate3d(0, 28px, 0); }
 .reveal-left  { transform: translate3d(calc(-1 * var(--reveal-shift, 32px)), 0, 0); }
 .reveal-right { transform: translate3d(var(--reveal-shift, 32px), 0, 0); }

@@ -35,25 +35,31 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="scroll-mt-24 mx-auto max-w-7xl px-4 mt-44 sm:px-6 lg:px-8 py-8 md:py-0">
-    <div v-if="loading" class="text-center">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-      <p class="text-lg text-monochrome-900">Désinscription en cours...</p>
+  <!-- Cette vue est servie seule (pas de header ni de footer) : la marge haute
+       remplace la hauteur de l'en-tête. -->
+  <div class="shell mt-[96px] pb-[64px] text-center xl:mt-[176px]">
+    <div v-if="loading">
+      <div
+        class="mx-auto mb-[16px] h-[48px] w-[48px] animate-spin rounded-full border-b-2 border-ink"
+      ></div>
+      <p class="font-sans text-base text-ink-60">Désinscription en cours...</p>
     </div>
 
-    <div v-else-if="error" class="text-center">
-      <div class="text-red-600 text-xl mb-4">❌</div>
-      <h1 class="text-lg md:text-2xl text-red-600 mb-4">{{ error }}</h1>
+    <div v-else-if="error">
+      <div class="mb-[16px] text-lead text-danger" aria-hidden="true">❌</div>
+      <h1 class="text-title text-danger">{{ error }}</h1>
     </div>
 
-    <div v-else-if="success" class="text-center">
-      <h1 class="text-lg md:text-3xl text-monochrome-900 mb-4">
-        Nous sommes désolés de vous voir partir &#128546 Nous espérons que vous reviendrez bientôt !
+    <div v-else-if="success" class="mx-auto max-w-[682px]">
+      <h1 class="text-title [word-break:break-word]">
+        Nous sommes désolés de vous voir partir &#128546 Nous espérons que vous reviendrez bientôt !
       </h1>
-      <p class="text-lg text-gray-600 mb-4">
-        Vous ne recevrez plus nos emails sur votre mail : {{ email }}
+      <p class="mt-[16px] font-sans text-label text-ink-60 [word-break:break-word]">
+        Vous ne recevrez plus nos emails sur votre mail : {{ email }}
       </p>
-      <h2 class="text-lg text-monochrome-900">Vous pouvez maintenant fermer cette page</h2>
+      <p class="mt-[16px] font-sans text-label text-ink-60">
+        Vous pouvez maintenant fermer cette page
+      </p>
     </div>
   </div>
 </template>
