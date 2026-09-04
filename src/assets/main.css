@@ -1,35 +1,500 @@
-@import './base.css';
+/*
+ * Polices du Figma Pawpy :
+ *   Coconat          → titres                    (font/familly/Primary)
+ *   Plus Jakarta Sans → UI, navigation, boutons  (font/familly/Secondary)
+ *   Sora             → texte courant             (Typeramp Body / Subbody)
+ *   Playfair Display → repli des titres si Coconat ne charge pas
+ * Les @import doivent rester en tête de fichier.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Sora:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Seul le Regular est fourni : `font-synthesis` est coupé plus bas pour que le
+   navigateur ne fabrique pas un faux gras. */
+@font-face {
+    font-family: 'Coconat';
+    src: url('./font/Coconat-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+@layer base {
+    body {
+        @apply bg-surface text-ink font-body antialiased;
+
+        /* Aucun débordement latéral ne doit devenir un défilement horizontal —
+           en particulier les glissements de `v-reveal` dans le hero. `clip` et
+           non `hidden` : `hidden` ferait du body un conteneur de défilement et
+           casserait le `position: sticky` du header. */
+        overflow-x: clip;
+    }
+
+    /* Navigation par ancres : défilement doux, et `scroll-margin-top` de la
+       hauteur du header collant pour que la section visée ne passe pas dessous. */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+
+    /* Solidaire des hauteurs de header : 64/80px avant xl, 102px au-delà. */
+    :target {
+        scroll-margin-top: 80px;
+    }
+
+    @media (min-width: 1280px) {
+        :target {
+            scroll-margin-top: 102px;
+        }
+    }
+
+    h1, h2, h3 {
+        /* Pas de faux gras : le fichier Coconat Demi n'est pas fourni. */
+        @apply font-display font-normal;
+        font-synthesis: none;
+    }
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+@layer components {
+    /*
+     * Gabarit du Figma : contenu de 1300px centré. `max-w-shell` vaut 1400px,
+     * gouttières comprises (cf. tailwind.config.js) : le contenu fait donc
+     * exactement 1300px dès 1400px de viewport, et ne touche jamais les bords
+     * en dessous.
+     */
+    .shell {
+        @apply mx-auto w-full max-w-shell px-6 md:px-10 xl:px-[50px];
+    }
+
+    /* Intitulé de section en gris clair (« Confiance », « Balade »…). */
+    .eyebrow {
+        @apply font-sans text-label text-ink-40;
+    }
+
+    /*
+     * Surlignage rose des mots-clés de titre. Le rectangle vit sur ::before
+     * plutôt que sur `background` : c'est ce qui permet de l'incliner sans
+     * faire tourner le texte, et de le déplier de la gauche vers la droite
+     * (variante `reveal-highlight`).
+     */
+    .highlight {
+        position: relative;
+        display: inline-block;
+    }
+
+    .highlight::before {
+        content: '';
+        position: absolute;
+        /* Léger débord latéral : l'inclinaison ne doit pas raboter les lettres. */
+        inset: 0 -0.1em;
+        z-index: -1;
+        background-color: theme('colors.accent / 25%');
+        transform: rotate(-2.3deg);
+        transform-origin: left center;
+    }
+
+    /* `drop-shadow` plutôt que `box-shadow` : le PNG est détouré, l'ombre doit
+       suivre la silhouette du téléphone et non son cadre rectangulaire. */
+    .phone-shadow {
+        filter:
+            drop-shadow(8px 12px 26px rgba(166, 166, 166, 0.1))
+            drop-shadow(30px 48px 48px rgba(166, 166, 166, 0.09))
+            drop-shadow(80px 108px 65px rgba(166, 166, 166, 0.05))
+            drop-shadow(100px 193px 77px rgba(166, 166, 166, 0.01));
+    }
+
+    /* Couches calibrées sur le mockup de 389px. Sous xl il tombe à 240–300px :
+       offsets réduits d'autant, sinon l'ombre déborde du téléphone. */
+    @media (max-width: 1279px) {
+        .phone-shadow {
+            filter:
+                drop-shadow(5px 7px 16px rgba(166, 166, 166, 0.1))
+                drop-shadow(18px 29px 29px rgba(166, 166, 166, 0.09))
+                drop-shadow(48px 65px 39px rgba(166, 166, 166, 0.05))
+                drop-shadow(60px 116px 46px rgba(166, 166, 166, 0.01));
+        }
+    }
+
+    /* Le SVG injecté par FooterDog.vue porte ses propres `width`/`height` :
+       on les neutralise pour qu'il suive la boîte de son conteneur. */
+    .footer-dog > svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/*
+ * Apparitions (directive v-reveal, voir src/directives/reveal.js).
+ * `.reveal` est l'état caché posé au montage, `.reveal-visible` l'état final ;
+ * la variante `reveal-*` choisit le point de départ. Le retard éventuel est
+ * appliqué en ligne par la directive, qui retire aussi toutes ces classes une
+ * fois l'apparition jouée (l'élément retrouve alors ses propres transitions).
+ *
+ * Ces règles sont volontairement hors @layer : elles doivent primer sur les
+ * utilitaires `transition-colors` / `transition-opacity` déjà posés sur
+ * certains liens et boutons, sinon l'apparition ne s'anime pas.
+ */
+.reveal {
+    opacity: 0;
+    transition:
+        opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity, transform;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+/*
+ * `--reveal-shift` règle la longueur du glissement horizontal (32px par
+ * défaut). Le hero la pousse à plusieurs centaines de pixels : chien et badges
+ * démarrent cachés derrière le mockup et en sortent en glissant. Ces amplitudes
+ * n'ont de sens que dans la scène absolue de 1300px — d'où deux classes plutôt
+ * qu'un `style` en ligne, qu'aucune règle responsive n'aurait pu surcharger.
+ */
+.hero-shift-dog,
+.hero-shift-badge { --reveal-shift: 32px; }
+
+@media (min-width: 1280px) {
+    .hero-shift-dog   { --reveal-shift: 320px; }
+    .hero-shift-badge { --reveal-shift: 260px; }
+}
+
+.reveal-up    { transform: translate3d(0, 28px, 0); }
+.reveal-left  { transform: translate3d(calc(-1 * var(--reveal-shift, 32px)), 0, 0); }
+.reveal-right { transform: translate3d(var(--reveal-shift, 32px), 0, 0); }
+.reveal-scale { transform: scale(0.96); }
+.reveal-fade  { transform: none; }
+
+/*
+ * Variante « surlignage » : le texte reste lisible dès le départ, seul le
+ * rectangle rose se déplie. L'animation porte donc sur ::before, d'où le retard
+ * relayé par `--reveal-delay` — une propriété personnalisée descend jusqu'aux
+ * pseudo-éléments, `transition-delay` non.
+ */
+.reveal-highlight {
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.reveal-highlight::before {
+    transform: rotate(-2.3deg) scaleX(0);
+    transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: transform;
+}
+
+.reveal.reveal-visible {
+    opacity: 1;
+    transform: none;
+}
+
+.reveal-highlight.reveal-visible::before {
+    transform: rotate(-2.3deg) scaleX(1);
+}
+
+/* Sécurité : si les classes sont posées avant que la préférence change. */
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.reveal-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .reveal-highlight::before {
+        transform: rotate(-2.3deg);
+        transition: none;
+    }
+}
+
+/* Les trois avatars du hero montent de 6px l'un après l'autre puis reviennent.
+   Cycle de 5s dont ~0,8s de mouvement ; le décalage vient des classes
+   `avatar-bob-*` posées dans HeroSection.vue. */
+@keyframes avatar-bob {
+    0%, 16%, 100% { transform: translate3d(0, 0, 0); }
+    8%            { transform: translate3d(0, -6px, 0); }
+}
+
+.avatar-bob {
+    animation: avatar-bob 5s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+.avatar-bob-2 { animation-delay: 250ms; }
+.avatar-bob-3 { animation-delay: 500ms; }
+
+@media (prefers-reduced-motion: reduce) {
+    .avatar-bob { animation: none; }
+}
+
+/* Pastille « Live » : le point bat et laisse partir un anneau qui s'efface.
+   L'anneau vit sur ::after pour que le `scale` du point ne le déforme pas. */
+@keyframes live-dot-pulse {
+    0%, 40%, 100% { transform: scale(1); }
+    12%           { transform: scale(1.25); }
+}
+
+@keyframes live-dot-ripple {
+    0%        { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.25); }
+    70%, 100% { box-shadow: 0 0 0 6px rgba(0, 0, 0, 0); }
+}
+
+.live-dot {
+    position: relative;
+    animation: live-dot-pulse 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+.live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    animation: live-dot-ripple 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live-dot,
+    .live-dot::after { animation: none; }
+}
+
+/* Sursaut discret d'un chiffre clé au moment où il s'incrémente. */
+@keyframes stat-tick {
+    0%   { transform: translate3d(0, 0, 0); }
+    35%  { transform: translate3d(0, -8px, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+
+.stat-tick {
+    animation: stat-tick 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stat-tick { animation: none; }
+}
+
+/*
+ * Carrousel de témoignages. Les quatre occupent la même cellule de grille :
+ * seul l'actif est opaque, la hauteur du bloc ne bouge donc jamais.
+ *
+ * Les deux mouvements s'enchaînent au lieu de se croiser — le sortant s'efface
+ * (280 ms), puis l'entrant paraît. Sans ce retard, les deux textes se
+ * superposeraient à mi-fondu et les lettres sembleraient s'imbriquer.
+ */
+.quote-slide {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        visibility 0s linear 280ms;
+}
+
+.quote-slide-active {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+    /* Le témoignage entrant attend que le sortant ait fini de s'effacer. */
+    transition-delay: 300ms, 300ms, 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .quote-slide {
+        transform: none;
+        transition: none;
+    }
+
+    .quote-slide-active {
+        transition-delay: 0s;
+    }
+}
+
+/*
+ * Illustration du footer « dessinée » (FooterDog.vue). `.dog-draw` pose l'état
+ * vierge, `.dog-draw-run` lance les deux animations ; chaque chemin lit son
+ * retard dans `--dog-delay`, posé en ligne par le composant. `pathLength="1"`
+ * (idem) normalise la longueur des chemins, ce qui rend un unique
+ * `stroke-dasharray: 1` valable pour les 246 tracés.
+ */
+.dog-draw path {
+    stroke-width: 0.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    fill-opacity: 0;
+}
+
+.dog-draw-run path {
+    animation:
+        dog-trace 260ms linear var(--dog-delay, 0ms) forwards,
+        dog-ink 200ms ease-out calc(var(--dog-delay, 0ms) + 260ms) forwards;
+}
+
+@keyframes dog-trace {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Le contour disparaît à mesure que le remplissage apparaît : sans quoi il
+   épaissirait durablement chaque forme de 0,8px. */
+@keyframes dog-ink {
+    from {
+        fill-opacity: 0;
+        stroke-opacity: 1;
+    }
+
+    to {
+        fill-opacity: 1;
+        stroke-opacity: 0;
+    }
+}
+
+/*
+ * Curseur « patte » (TheCursor.vue). `has-paw-cursor` n'est posée sur <html>
+ * que si un vrai pointeur est présent : sans JS, ou au doigt, le curseur
+ * système reste en place. Le sélecteur universel est nécessaire — `cursor`
+ * s'hérite, mais la feuille du navigateur repose un `cursor: auto` sur les
+ * liens, boutons et champs, qui l'emporte sur l'héritage.
+ */
+.has-paw-cursor,
+.has-paw-cursor * {
+    cursor: none;
+}
+
+/* Champs de saisie : la barre de texte native est plus utile que la patte. */
+.has-paw-cursor input:not([type='button']):not([type='submit']):not([type='checkbox']):not([type='radio']),
+.has-paw-cursor textarea,
+.has-paw-cursor [contenteditable='true'] {
+    cursor: text;
+}
+
+/* `transform` est réécrit à chaque frame par le composant, donc sans
+   transition. Seule l'opacité s'anime (entrée/sortie de la fenêtre). */
+.paw-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 140ms linear;
+    will-change: transform;
+}
+
+.paw-cursor-on {
+    opacity: 1;
+}
+
+/* Le grossissement porte sur l'image, pas sur le conteneur : il peut ainsi
+   s'animer sans retarder le déplacement. Largeur, `margin` et
+   `transform-origin` sont posés en ligne par le composant. */
+.paw-cursor-glyph {
+    display: block;
+    height: auto;
+    transition: transform 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Survol d'une zone cliquable : la patte grossit de moitié. */
+.paw-cursor-active .paw-cursor-glyph {
+    transform: scale(1.5);
+}
+
+/* Bouton enfoncé : la patte se rétracte. Règle placée après celle du survol, à
+   spécificité égale, pour primer pendant le clic. */
+.paw-cursor-press .paw-cursor-glyph {
+    transform: scale(0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .paw-cursor,
+    .paw-cursor-glyph {
+        transition: none;
+    }
+}
+
+/*
+ * Feuilles de page (SheetOverlay.vue). La feuille part entièrement au-dessus de
+ * l'écran et descend d'un trait — d'où une courbe très sortante plutôt que le
+ * cubic-bezier commun aux autres apparitions. Au retour la courbe est inversée
+ * et le temps raccourci : le papier est relâché, il remonte d'un coup.
+ *
+ * Le voile s'attarde un peu plus que la feuille pour ne pas découvrir la page
+ * avant qu'elle soit sortie de l'écran.
+ */
+.sheet-enter-active {
+    transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet-leave-active {
+    transition: transform 380ms cubic-bezier(0.5, 0, 0.75, 0);
+}
+
+.sheet-enter-from,
+.sheet-leave-to {
+    transform: translate3d(0, -100%, 0);
+}
+
+.sheet-veil-enter-active,
+.sheet-veil-leave-active {
+    transition: opacity 420ms ease;
+}
+
+.sheet-veil-enter-from,
+.sheet-veil-leave-to {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sheet-enter-active,
+    .sheet-leave-active {
+        transition: none;
+    }
+
+    .sheet-enter-from,
+    .sheet-leave-to {
+        transform: none;
+    }
+}
+
+/*
+ * Portraits de l'équipe (TeamOverlay.vue). Au survol d'une carte la photo
+ * s'incline de 2° d'un côté puis de l'autre, sans fin ; le cycle passe par
+ * l'aplomb à ses deux extrémités, la boucle est donc continue et la photo
+ * revient droite en douceur dès que le pointeur quitte la carte. Les 24px de
+ * gouttière absorbent les ~5px de débord des coins.
+ */
+@keyframes portrait-tilt {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-2deg); }
+    75%      { transform: rotate(2deg); }
+}
+
+.portrait-tilt {
+    transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.portrait-card:hover .portrait-tilt {
+    animation: portrait-tilt 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portrait-card:hover .portrait-tilt {
+        animation: none;
+    }
+
+    .portrait-tilt {
+        transition: none;
+    }
 }

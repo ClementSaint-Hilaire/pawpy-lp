@@ -34,3 +34,15 @@ coverage
 
 # Vitest
 __screenshots__/
+
+
+# Environment files
+.env.production.local
+.env.local
+.env.production
+backend/.env
+backend/.env.local
+backend/.env.production
+
+# Backend build
+backend/dist

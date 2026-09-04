@@ -1,0 +1,40 @@
+services:
+  vue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    environment:
+      - NODE_ENV=production
+      - VIRTUAL_HOST=pawpy.fr,www.pawpy.fr
+      - VIRTUAL_PATH=/
+      - LETSENCRYPT_HOST=pawpy.fr,www.pawpy.fr
+      - LETSENCRYPT_EMAIL=contact@pawpy.fr
+    networks:
+      - web
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env.production
+    environment:
+      - VIRTUAL_HOST=pawpy.fr,www.pawpy.fr
+      - VIRTUAL_PATH=/api/
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=pawpy.fr,www.pawpy.fr
+      - LETSENCRYPT_EMAIL=contact@pawpy.fr
+    networks:
+      - web
+    restart: unless-stopped
+
+volumes:
+  nginx-certs:
+  nginx-vhost:
+  nginx-html:
+  nginx-acme:
+
+networks:
+  web:
+    external: true
