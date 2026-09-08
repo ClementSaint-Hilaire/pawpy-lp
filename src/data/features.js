@@ -31,10 +31,10 @@ export const features = [
     reversed: false,
     items: [
       { icon: iconCertification, label: 'Entrée sur certification' },
-      { icon: iconFormation, label: 'Formation incluses' },
-      { icon: iconMessage, label: 'Messagerie privée encrypté' },
+      { icon: iconFormation, label: 'Formations incluses' },
+      { icon: iconMessage, label: 'Messagerie privée chiffrée' },
       { icon: iconInterlocuteur, label: 'Choix complet de votre interlocuteur' },
-      { icon: iconPaiement, label: 'Paiement intégrés & sécurisés' },
+      { icon: iconPaiement, label: 'Paiements intégrés & sécurisés' },
     ],
   },
   {
@@ -62,7 +62,7 @@ export const features = [
       { icon: iconPaiementSecurise, label: 'Paiement 100% sécurisé' },
       { icon: iconApp, label: 'Réservez directement dans Pawpy' },
       { icon: iconHistorique, label: 'Historique de vos transactions' },
-      { icon: iconTransfere, label: 'Transfère d’argent' },
+      { icon: iconTransfere, label: 'Transfert d’argent' },
     ],
   },
   {

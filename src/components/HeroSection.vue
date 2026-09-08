@@ -37,20 +37,20 @@ const badges = [
             :class="[index > 0 ? '-ml-[12px]' : '', `avatar-bob-${index + 1}`]"
           />
         </div>
-        <span class="font-sans text-label text-ink-60">Communautée certifiée</span>
+        <span class="font-sans text-label text-ink-60">Communauté certifiée</span>
       </div>
 
       <!-- Pas de largeur maximale au-delà de xl : la police de repli, plus large
            que Coconat, ajouterait une troisième ligne. En dessous, le <br> est
            neutralisé et le titre se coupe là où la largeur l'impose. -->
       <h1 v-reveal="100" class="mt-[24px] text-display font-normal uppercase xl:mt-[32px]">
-        Votre chic à du chien.<br class="hidden xl:inline" />
+        Votre chic a du chien.<br class="hidden xl:inline" />
         Et si votre chien avait du chic&nbsp;?
       </h1>
 
       <p v-reveal="200" class="mt-[12px] max-w-[682px] text-base text-ink-60">
-        Pawpy réunit promeneur certifiés et propriétaires de chiens en région parisienne.
-        Confiance, transparence, sécurité, tout est pensé pour le bien être de votre chiens.
+        Pawpy réunit promeneurs certifiés et propriétaires de chiens en région parisienne.
+        Confiance, transparence, sécurité, tout est pensé pour le bien-être de votre chien.
       </p>
 
       <!-- Deux boutons `lg` ne tiennent pas côte à côte sur un téléphone : ils
