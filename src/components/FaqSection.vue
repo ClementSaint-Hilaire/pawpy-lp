@@ -10,7 +10,7 @@ const items = [
   {
     question: 'Qu’est-ce que Pawpy ?',
     answer:
-      'Anomi est une application qui met en relation les propriétaires de chiens avec des promeneurs certifiés et qualifiés, spécialisés dans le bien-être animal. Notre priorité est de garantir des sorties sécurisées, adaptées aus spécificités de chaque chien.',
+      'Pawpy est une application qui met en relation les propriétaires de chiens avec des promeneurs certifiés et qualifiés, spécialisés dans le bien-être animal. Notre priorité est de garantir des sorties sécurisées, adaptées aux spécificités de chaque chien.',
   },
   {
     question: 'Quelles infos fournir sur mon chien ?',
@@ -20,12 +20,12 @@ const items = [
   {
     question: 'Puis‑je rencontrer le promeneur avant ?',
     answer:
-      'Avant de confier votre animal, vous avez la possibilité de rencontrer le promeneur, donnez vous rendez-vous et laisser la magie opérer.',
+      'Avant de confier votre animal, vous avez la possibilité de rencontrer le promeneur, donnez-vous rendez-vous et laissez la magie opérer.',
   },
   {
     question: 'Comment sont fixés les prix ?',
     answer:
-      'Ce sont les propriétaires eux-mêmes qui fixent le tarif qu’ils jugent juste pour la promenade de leur chien. Ils choisissent le montant en fonction de la durée souhaitée, des besoins spécifiques de leur chien. Le prix apparaît toujours clairement avant validation, sans frais cachés ni surprise. Le promeneur à également la possibilité de fixer son tarif à titre indicatif directement sur son profil.',
+      'Ce sont les propriétaires eux-mêmes qui fixent le tarif qu’ils jugent juste pour la promenade de leur chien. Ils choisissent le montant en fonction de la durée souhaitée, des besoins spécifiques de leur chien. Le prix apparaît toujours clairement avant validation, sans frais cachés ni surprise. Le promeneur a également la possibilité de fixer son tarif à titre indicatif directement sur son profil.',
   },
   {
     question: 'Puis‑je refuser une promenade ?',
