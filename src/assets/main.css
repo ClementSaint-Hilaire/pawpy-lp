@@ -216,6 +216,30 @@
     }
 }
 
+/*
+ * Visuels des sections « feature » (FeatureSection.vue). Le fond carré ne
+ * bouge pas ; le contenu posé dessus — l'écran de l'app — glisse jusqu'à sa
+ * place au rythme du défilement. Le composant pose `--p` sur le carré : 0 quand
+ * le visuel entre par le bas de l'écran, 1 une fois la section centrée. Le
+ * décalage vaut donc `--feature-travel` au départ, et s'annule à l'arrivée.
+ *
+ * -16.18 % = les -200px du Figma rapportés au fond de 1236px. Le glissement
+ * porte sur ce calque plein cadre plutôt que sur l'image elle-même : un
+ * `translate` en pourcentage se mesure sur la boîte de l'élément, il fallait
+ * qu'elle fasse exactement la taille du fond pour que l'amplitude suive la
+ * largeur réelle de la colonne.
+ */
+.feature-visual-shift {
+    transform: translate3d(0, calc((1 - var(--p, 1)) * var(--feature-travel, -16.18%)), 0);
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feature-visual-shift {
+        transform: none;
+    }
+}
+
 /* Les trois avatars du hero montent de 6px l'un après l'autre puis reviennent.
    Cycle de 5s dont ~0,8s de mouvement ; le décalage vient des classes
    `avatar-bob-*` posées dans HeroSection.vue. */
