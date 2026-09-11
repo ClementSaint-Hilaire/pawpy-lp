@@ -26,7 +26,7 @@ import { features } from '@/data/features'
         :key="feature.id"
         :eyebrow="feature.eyebrow"
         :title="feature.title"
-        :image="feature.image"
+        :visual="feature.visual"
         :image-alt="feature.imageAlt"
         :items="feature.items"
         :reversed="feature.reversed"

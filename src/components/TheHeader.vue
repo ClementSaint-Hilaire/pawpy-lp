@@ -7,9 +7,9 @@ import logo from '@/assets/figma/logo-pawpy.svg'
 // `to` désigne une vraie page (l'équipe, le manifeste), `href` une ancre dans
 // l'accueil. La même liste alimente la barre desktop et MobileNav.vue.
 const links = [
-  { label: 'Features', href: '#features' },
+  { label: 'Fonctionnalités', href: '#features' },
   { label: 'Équipe', to: '/auto-mode-setup' },
-  { label: 'Manifest', to: '/manifest' },
+  { label: 'Manifeste', to: '/manifest' },
   { label: 'FAQ', href: '#faq' },
 ]
 
