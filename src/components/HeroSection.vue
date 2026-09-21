@@ -1,5 +1,6 @@
 <script setup>
 import BaseButton from './BaseButton.vue'
+import HeroPawTrail from './HeroPawTrail.vue'
 import avatar1 from '@/assets/figma/avatar-1.png'
 import avatar2 from '@/assets/figma/avatar-2.png'
 import avatar3 from '@/assets/figma/avatar-3.png'
@@ -24,7 +25,11 @@ const badges = [
 
 <template>
   <!-- pt : le contenu du hero commence à y=128 dans la maquette, sous l'en-tête de 102px. -->
-  <section id="probleme" class="shell pt-[26px]">
+  <section id="probleme" class="relative isolate shell pt-[26px]">
+    <!-- Calque de la traînée de pattes : `relative` en fait son bloc conteneur,
+         `isolate` retient son z-index négatif au-dessus du fond de section. -->
+    <HeroPawTrail />
+
     <div class="flex flex-col items-center text-center">
       <div v-reveal class="flex items-center gap-[8px]">
         <div class="flex">
