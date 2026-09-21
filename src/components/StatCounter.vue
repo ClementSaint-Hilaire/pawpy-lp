@@ -8,6 +8,12 @@
  *   • l'écart accumulé est conservé dans le localStorage : au rechargement, le
  *     visiteur retrouve le compteur là où il l'avait laissé.
  *
+ * Le garde-fou est un *rythme*, pas un total : l'écart ne peut pas dépasser ce
+ * que `DRIFT_PER_DAY` autorise depuis la première visite, plus la réserve
+ * `SESSION_DRIFT` d'une visite. Un plafond fixe, lui, finissait par être
+ * atteint pour de bon — le chiffre se figeait alors définitivement sur ce
+ * navigateur, et l'incrémentation ne repartait plus jamais.
+ *
  * `prefers-reduced-motion` coupe les transitions : les valeurs changent d'un
  * coup, sans décompte ni sursaut.
  */
@@ -28,13 +34,17 @@ const COUNT_UP_DURATION = 1400
 const TICK_DURATION = 450
 const TICK_DELAY = [9000, 26000] // fourchette entre deux incréments (ms)
 const TICK_STEP = [1, 3] // amplitude d'un incrément
-const MAX_DRIFT = 150 // garde-fou : pas d'inflation sur un onglet laissé ouvert
+const SESSION_DRIFT = 15 // réserve d'une visite : borne l'onglet laissé ouvert
+const DRIFT_PER_DAY = 25 // croissance plausible d'un jour sur l'autre
+const DAY = 86_400_000
 
 const base = Number(props.value)
 const pad = props.value.length
 
 const el = ref(null)
 const drift = ref(0)
+// Date de la première visite : l'origine à partir de laquelle le plafond monte.
+let since = Date.now()
 const displayed = ref(0)
 const ticking = ref(false)
 
@@ -52,17 +62,36 @@ const readStore = () => {
   }
 }
 
+// Plafond du moment : la réserve d'une visite, plus ce que le temps écoulé
+// depuis la première a rendu crédible. Il monte tout seul, donc le compteur ne
+// peut jamais se bloquer pour de bon.
+const maxDrift = () => Math.floor(SESSION_DRIFT + (DRIFT_PER_DAY * (Date.now() - since)) / DAY)
+
+// Entrée stockée : `{ value, since }`. Un nombre nu est l'ancien format, qui ne
+// gardait que l'écart ; on lui reconstitue alors une première visite cohérente
+// avec l'écart déjà accumulé, pour que le chiffre ne recule pas au premier
+// chargement après cette mise à jour.
 const readDrift = () => {
   if (!props.storageKey) return 0
-  const saved = Number(readStore()[props.storageKey])
-  return Number.isFinite(saved) ? Math.min(Math.max(saved, 0), MAX_DRIFT) : 0
+
+  const entry = readStore()[props.storageKey]
+  const stored = typeof entry === 'object' && entry !== null ? entry : { value: entry }
+  const saved = Number(stored.value)
+  if (!Number.isFinite(saved) || saved <= 0) return 0
+
+  const savedSince = Number(stored.since)
+  since = Number.isFinite(savedSince)
+    ? Math.min(savedSince, Date.now())
+    : Date.now() - (saved / DRIFT_PER_DAY) * DAY
+
+  return Math.min(saved, maxDrift())
 }
 
 const writeDrift = () => {
   if (!props.storageKey) return
   try {
     const store = readStore()
-    store[props.storageKey] = drift.value
+    store[props.storageKey] = { value: drift.value, since }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
   } catch {
     /* stockage indisponible : l'écart vit le temps de la visite */
@@ -95,20 +124,24 @@ const animateTo = (to, duration) => {
   frame = window.requestAnimationFrame(step)
 }
 
+// La boucle tourne tant que le composant vit, même une fois la réserve épuisée :
+// le plafond remonte avec les heures, et le tour suivant en profite.
 const scheduleTick = () => {
-  if (drift.value >= MAX_DRIFT) return
-
   timer = window.setTimeout(() => {
     // Onglet en arrière-plan : on laisse passer le tour plutôt que d'empiler
     // des incréments que personne ne voit.
     if (document.visibilityState === 'visible') {
-      drift.value = Math.min(drift.value + random(...TICK_STEP), MAX_DRIFT)
-      writeDrift()
-      animateTo(base + drift.value, TICK_DURATION)
+      const next = Math.min(drift.value + random(...TICK_STEP), maxDrift())
 
-      ticking.value = true
-      window.clearTimeout(pulse)
-      pulse = window.setTimeout(() => (ticking.value = false), 900)
+      if (next > drift.value) {
+        drift.value = next
+        writeDrift()
+        animateTo(base + drift.value, TICK_DURATION)
+
+        ticking.value = true
+        window.clearTimeout(pulse)
+        pulse = window.setTimeout(() => (ticking.value = false), 900)
+      }
     }
 
     scheduleTick()

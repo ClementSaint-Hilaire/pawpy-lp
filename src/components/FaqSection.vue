@@ -66,11 +66,14 @@ const toggle = (index) => {
     </div>
 
     <div class="mt-[40px] flex flex-col gap-[24px] lg:mt-[64px] lg:flex-row lg:items-start lg:gap-[32px]">
+      <!-- Le visuel est cadré au ratio de la maquette (400x443) : sous lg il
+           reprend ce même ratio plutôt qu'une hauteur fixe, sinon `object-cover`
+           rogne le haut et le bas de l'image en colonne pleine largeur. -->
       <img
         v-reveal="{ from: 'scale' }"
         :src="faqImage"
         alt=""
-        class="h-[240px] w-full object-cover md:h-[320px] lg:h-[443px] lg:w-[400px] lg:shrink-0" />
+        class="mx-auto aspect-[800/886] w-full max-w-[400px] object-cover lg:mx-0 lg:aspect-auto lg:h-[443px] lg:w-[400px] lg:max-w-none lg:shrink-0" />
 
       <dl class="flex-1">
         <div

@@ -449,6 +449,74 @@
 }
 
 /*
+ * Traînée de pattes du hero (HeroPawTrail.vue). Le composant dépose une
+ * empreinte tous les 88px parcourus ; ici se joue leur mise en forme.
+ *
+ * La patte est un masque CSS posé sur un aplat de couleur, et non une <img> :
+ * le SVG est exporté en blanc, invisible sur le fond du hero, et un masque
+ * laisse choisir la teinte en une ligne. C'est aussi pourquoi
+ * `src/assets/figma/paw-trail.svg` est rempli en noir opaque — le masque lit le
+ * canal alpha, toute transparence dans le fichier viendrait s'ajouter à celle
+ * de `ink-40`.
+ */
+.hero-paw-trail {
+    position: absolute;
+    inset: 0;
+    /* Sous le contenu en flux, au-dessus du fond de section. Un calque absolu
+       sans z-index négatif se peindrait par-dessus le titre et les images —
+       d'où aussi le `isolate` porté par la section, qui empêche ce -1 de
+       descendre derrière le fond du body. */
+    z-index: -1;
+    pointer-events: none;
+    /* Les empreintes déposées au ras des gouttières ne débordent pas du hero. */
+    overflow: hidden;
+}
+
+/* Position et rotation sont réécrites en ligne par le composant, sans
+   transition : une empreinte ne bouge plus une fois posée. */
+.hero-paw-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+}
+
+.hero-paw-mark {
+    display: block;
+    width: 25px;
+    aspect-ratio: 75 / 81;
+    background-color: theme('colors.ink.40');
+    /* Les deux écritures sont posées à la main : `mask` est une propriété
+       abrégée que la configuration d'autoprefixer du projet ne préfixe pas. Le
+       fichier passe par une variable parce que Vite l'inline en data-URI : sans
+       elle, les 3,5 ko du tracé seraient écrits deux fois dans la feuille. */
+    --hero-paw-mask: url('./figma/paw-trail.svg');
+    -webkit-mask: var(--hero-paw-mask) center / contain no-repeat;
+    mask: var(--hero-paw-mask) center / contain no-repeat;
+    animation: hero-paw-step 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* Pose franche, palier, puis effacement lent — le pas s'imprime d'un coup et
+   sèche doucement. La durée doit rester égale à `LIFE` dans le composant.
+   Le palier plafonne à 0,5 : l'opacité de `ink-40` est déjà à moitié, la trace
+   sort donc au quart de l'aplat. C'est le seul réglage à toucher pour
+   l'intensité — la couleur reste le jeton du thème. */
+@keyframes hero-paw-step {
+    0%   { opacity: 0; transform: scale(0.72); }
+    14%  { opacity: 0.5; transform: scale(1); }
+    55%  { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.04); }
+}
+
+/* Le composant ne branche déjà rien dans ce cas ; la règle couvre le rendu
+   serveur et un changement de préférence en cours de visite. */
+@media (prefers-reduced-motion: reduce) {
+    .hero-paw-trail {
+        display: none;
+    }
+}
+
+/*
  * Feuilles de page (SheetOverlay.vue). La feuille part entièrement au-dessus de
  * l'écran et descend d'un trait — d'où une courbe très sortante plutôt que le
  * cubic-bezier commun aux autres apparitions. Au retour la courbe est inversée
