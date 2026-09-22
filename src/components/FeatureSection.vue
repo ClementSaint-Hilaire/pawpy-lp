@@ -7,7 +7,8 @@ import { trackScrollProgress } from '@/utils/motion'
 const props = defineProps({
   eyebrow: { type: String, required: true },
   title: { type: String, required: true },
-  // Montage du visuel : { fond, content, left, top, width } — cf. features.js.
+  // Montage du visuel : { fond, content, left, top, cssWidth, width, height }
+  // — cf. features.js.
   visual: { type: Object, required: true },
   imageAlt: { type: String, default: '' },
   items: { type: Array, required: true },
@@ -72,6 +73,8 @@ onBeforeUnmount(() => stopTracking())
           <img
             :src="visual.fond"
             alt=""
+            width="1236"
+            height="1236"
             class="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
             decoding="async"
@@ -83,8 +86,10 @@ onBeforeUnmount(() => stopTracking())
             <img
               :src="visual.content"
               :alt="imageAlt"
+              :width="visual.width"
+              :height="visual.height"
               class="absolute max-w-none"
-              :style="{ left: visual.left, top: visual.top, width: visual.width }"
+              :style="{ left: visual.left, top: visual.top, width: visual.cssWidth }"
               loading="lazy"
               decoding="async"
             />

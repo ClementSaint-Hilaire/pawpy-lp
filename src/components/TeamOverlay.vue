@@ -41,7 +41,9 @@ const { open, close } = useRouteSheet('/auto-mode-setup')
           >
             <img
               :src="member.photo"
-              :alt="member.name"
+              :alt="`Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — portrait de ${member.name}, ${member.role}`"
+              :width="member.width"
+              :height="member.height"
               class="portrait-tilt h-[168px] w-full object-cover sm:h-[240px]"
               loading="lazy"
               decoding="async"

@@ -74,6 +74,7 @@ onBeforeUnmount(stop)
           :key="testimonial.author"
           type="button"
           role="tab"
+          aria-controls="temoignages-panel"
           :aria-selected="index === current"
           :aria-label="`Témoignage ${index + 1} : ${testimonial.author}`"
           class="h-[8px] w-[8px] rounded-full transition-colors duration-300"
@@ -87,6 +88,7 @@ onBeforeUnmount(stop)
            la mise en page. Seul l'actif est visible et lu. -->
       <div
         v-reveal="150"
+        id="temoignages-panel"
         class="mt-[32px] grid w-full"
         role="tabpanel"
         aria-live="polite"
@@ -104,7 +106,13 @@ onBeforeUnmount(stop)
           </blockquote>
 
           <figcaption class="mt-[32px] flex items-center gap-[8px]">
-            <img :src="testimonial.avatar" alt="" class="h-[64px] w-[44px] shrink-0 object-cover" />
+            <img
+              :src="testimonial.avatar"
+              alt=""
+              width="44"
+              height="64"
+              class="h-[64px] w-[44px] shrink-0 object-cover"
+            />
             <span class="font-sans text-label text-ink-60">—{{ testimonial.author }}</span>
           </figcaption>
         </figure>

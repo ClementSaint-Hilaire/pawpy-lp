@@ -35,5 +35,18 @@ export default createRouter({
       component: Unsubscribe,
       beforeEnter: requireEmail,
     },
+
+    // Place des futures pages d'arrondissement (/promenade-chien-paris-15…) :
+    // une route par page, une vue par page et une entrée dans
+    // public/sitemap.xml. Rien n'est déclaré tant qu'il n'y a pas de contenu
+    // propre à chaque quartier — des pages quasi identiques se pénalisent
+    // entre elles.
+
+    // Sans cette dernière règle, une URL inconnue ne correspond à aucune route
+    // et RouterView ne rend rien : le visiteur voit une page blanche. GitHub
+    // Pages a déjà répondu 404 pour l'adresse demandée (voir le 404.html du
+    // workflow de déploiement), le renvoi à l'accueil ne masque donc aucun
+    // statut au robot.
+    { path: '/:pathMatch(.*)*', name: 'not-found', redirect: '/' },
   ],
 })

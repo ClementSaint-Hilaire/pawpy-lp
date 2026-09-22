@@ -4,10 +4,10 @@
  *   Plus Jakarta Sans → UI, navigation, boutons  (font/familly/Secondary)
  *   Sora             → texte courant             (Typeramp Body / Subbody)
  *   Playfair Display → repli des titres si Coconat ne charge pas
- * Les @import doivent rester en tête de fichier.
+ * Les trois familles Google sont demandées dans index.html : en @import, le
+ * navigateur ne les découvre qu'une fois cette feuille téléchargée et analysée,
+ * ce qui retarde d'autant le premier texte peint.
  */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Sora:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
 
 @tailwind base;
 @tailwind components;

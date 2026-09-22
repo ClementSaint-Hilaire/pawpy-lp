@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import MobileNav from './MobileNav.vue'
 import logo from '@/assets/figma/logo-pawpy.svg'
 
@@ -15,6 +15,13 @@ const links = [
 
 // Sous xl, les liens vivent dans une feuille dont le header détient l'état.
 const menuOpen = ref(false)
+
+// Sur l'accueil, RouterLink n'a nulle part où aller : on remonte la page, comme
+// le faisait l'ancre `#` d'avant.
+const route = useRoute()
+const onLogoClick = () => {
+  if (route.path === '/') window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 </script>
 
 <template>
@@ -22,9 +29,17 @@ const menuOpen = ref(false)
     <div
       class="flex h-[64px] items-center gap-[10px] px-6 md:h-[80px] md:px-10 xl:h-[102px] xl:px-[98px]"
     >
-      <a v-reveal.fade href="#" class="h-[24px] w-[110px] shrink-0">
-        <img :src="logo" alt="Pawpy" class="h-full w-full object-contain object-left" />
-      </a>
+      <!-- Le logo est le retour à l'accueil : un vrai lien de navigation, pas
+           une ancre morte — il doit rester cliquable et suivable par un robot. -->
+      <RouterLink
+        v-reveal.fade
+        to="/"
+        class="h-[24px] w-[110px] shrink-0"
+        aria-label="Pawpy, retour à l’accueil"
+        @click="onLogoClick"
+      >
+        <img :src="logo" alt="Pawpy" width="110" height="24" class="h-full w-full object-contain object-left" />
+      </RouterLink>
 
       <nav class="hidden flex-1 items-center justify-end gap-[32px] xl:flex">
         <!-- Les deux liaisons s'excluent (`v-bind` conditionnel) : un `:href`

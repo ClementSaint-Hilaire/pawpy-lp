@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import ctaPaw from '@/assets/figma/cta-paw.png'
+import ctaPaw from '@/assets/figma/cta-paw.webp'
 
 const BEEHIIV_FORM_ID = '60d4e27f-2807-4a30-a595-d78cb414a312'
 const BEEHIIV_LOADER_SRC = 'https://subscribe-forms.beehiiv.com/v3/loader.js'
@@ -65,6 +65,10 @@ onBeforeUnmount(() => {
         v-reveal="{ delay: 280, from: 'right' }"
         :src="ctaPaw"
         alt=""
+        width="374"
+        height="418"
+        loading="lazy"
+        decoding="async"
         class="pointer-events-none hidden xl:absolute xl:left-[823px] xl:top-0 xl:block xl:w-[374px] xl:max-w-none"
       />
     </div>

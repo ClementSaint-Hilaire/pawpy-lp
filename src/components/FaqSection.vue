@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import faqImage from '@/assets/figma/faq-image.png'
+import faqImage from '@/assets/figma/faq-image.webp'
 import iconPlus from '@/assets/figma/icons/plus.svg'
 import iconMinus from '@/assets/figma/icons/minus.svg'
 
@@ -72,7 +72,11 @@ const toggle = (index) => {
       <img
         v-reveal="{ from: 'scale' }"
         :src="faqImage"
-        alt=""
+        alt="Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — une propriétaire complice avec son chien"
+        width="800"
+        height="886"
+        loading="lazy"
+        decoding="async"
         class="mx-auto aspect-[800/886] w-full max-w-[400px] object-cover lg:mx-0 lg:aspect-auto lg:h-[443px] lg:w-[400px] lg:max-w-none lg:shrink-0" />
 
       <dl class="flex-1">
@@ -84,16 +88,18 @@ const toggle = (index) => {
         >
           <dt>
             <button
+              :id="`faq-question-${index}`"
               type="button"
               class="flex w-full items-center justify-between gap-[16px] py-[16px] text-left"
               :aria-expanded="openIndex === index"
+              :aria-controls="`faq-answer-${index}`"
               @click="toggle(index)"
             >
               <span class="font-sans text-base text-ink">{{ item.question }}</span>
               <span class="flex h-[24px] w-[24px] shrink-0 items-center justify-center overflow-clip">
                 <img
                   :src="openIndex === index ? iconMinus : iconPlus"
-                  :alt="openIndex === index ? 'Replier' : 'Déplier'"
+                  alt=""
                   class="h-full w-full object-contain"
                 />
               </span>
@@ -104,6 +110,9 @@ const toggle = (index) => {
                cible : elle doit dépasser la plus longue réponse reflowée en
                colonne étroite, sans quoi le texte est rogné. -->
           <dd
+            :id="`faq-answer-${index}`"
+            role="region"
+            :aria-labelledby="`faq-question-${index}`"
             class="overflow-hidden transition-all duration-300 ease-in-out"
             :class="openIndex === index ? 'max-h-[700px] pb-[16px] opacity-100' : 'max-h-0 opacity-0'"
           >
