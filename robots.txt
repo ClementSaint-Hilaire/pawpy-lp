@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /confirmation
+Disallow: /unsubscribe
+
+Sitemap: https://pawpy.fr/sitemap.xml

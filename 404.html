@@ -2,17 +2,237 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/logo.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pawpy réunit promeneurs certifiés et propriétaires de chiens en région parisienne. Confiance, transparence, sécurité, tout est pensé pour le bien-être de votre chien.">
+
+    <!--
+      Source de vérité du SEO du site. L'application est une SPA Vue sans
+      rendu serveur : aucun composant n'écrit de balise <head>, tout se décide
+      ici. Une seule page est indexable (l'accueil), d'où les valeurs figées.
+      Toute modification de titre / description doit être répercutée sur les
+      blocs Open Graph, Twitter et JSON-LD ci-dessous.
+    -->
+    <title>Pawpy — Promenade de chien à Paris avec des promeneurs certifiés</title>
+    <meta name="description" content="Pawpy met en relation les propriétaires de chiens et des promeneurs certifiés à Paris : profil vérifié, promenade suivie en temps réel et paiement sécurisé.">
+
+    <!-- Canonical unique : /manifest et /auto-mode-setup servent la même page
+         d'accueil (voir router/index.js), et les liens newsletter arrivent avec
+         des paramètres UTM. Tout doit être rattaché à la racine. -->
+    <link rel="canonical" href="https://pawpy.fr/">
+
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
+    <link rel="icon" sizes="32x32" href="/favicon.ico">
+
+    <!-- Les familles Google sont demandées ici plutôt qu'en @import dans
+         main.css : en @import, le navigateur ne les découvre qu'une fois la
+         feuille de styles téléchargée et analysée, ce qui ajoute un aller-retour
+         avant le premier texte peint. Seules les graisses réellement utilisées
+         sont demandées (400 partout ; 600 pour la seule police d'affichage). -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <meta name="google-site-verification" content="g4nPpaAy97R8edYqsw5nYoRqJATFo7H3fqxcAM4GyBs" />
-    <title>Pawpy — La promenade de chien, enfin fiable</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400&family=Sora:wght@400&family=Playfair+Display:wght@400;600&display=swap">
+
+    <meta name="google-site-verification" content="g4nPpaAy97R8edYqsw5nYoRqJATFo7H3fqxcAM4GyBs">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pawpy.fr/">
+    <meta property="og:site_name" content="Pawpy">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:title" content="Pawpy — Promenade de chien à Paris avec des promeneurs certifiés">
+    <meta property="og:description" content="Pawpy met en relation les propriétaires de chiens et des promeneurs certifiés à Paris : profil vérifié, promenade suivie en temps réel et paiement sécurisé.">
+    <meta property="og:image" content="https://pawpy.fr/og-pawpy-promenade-chien-paris.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — un chien tenu en laisse lors d’une promenade à Paris">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pawpy — Promenade de chien à Paris avec des promeneurs certifiés">
+    <meta name="twitter:description" content="Pawpy met en relation les propriétaires de chiens et des promeneurs certifiés à Paris : profil vérifié, promenade suivie en temps réel et paiement sécurisé.">
+    <meta name="twitter:image" content="https://pawpy.fr/og-pawpy-promenade-chien-paris.jpg">
+    <meta name="twitter:image:alt" content="Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — un chien tenu en laisse lors d’une promenade à Paris">
+
     <!-- beehiiv : attribution (UTM / referrer) des inscriptions newsletter. -->
     <script type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
-    <script type="module" crossorigin src="/assets/index-kx7Mq4Cj.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Bjl3EX0a.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://pawpy.fr/#organization",
+          "name": "Pawpy",
+          "alternateName": "Pawpy - Promenade de chiens à Paris",
+          "url": "https://pawpy.fr/",
+          "slogan": "Le luxe se promène à Paris.",
+          "logo": "https://pawpy.fr/logo.svg",
+          "description": "Pawpy est un service premium de promenade de chiens à Paris mettant en relation des propriétaires avec des promeneurs certifiés. Pawpy propose une expérience fiable, sécurisée et transparente grâce à la vérification des profils, au suivi des promenades en temps réel, au paiement sécurisé et à une assurance intégrée dédiée aux promenades.",
+          "areaServed": {
+            "@type": "City",
+            "name": "Paris",
+            "sameAs": "https://www.wikidata.org/wiki/Q90"
+          },
+          "knowsAbout": [
+            "Promenade de chiens",
+            "Promenade de chien à Paris",
+            "Promeneur de chien",
+            "Promeneur de chien à Paris",
+            "Promeneurs certifiés",
+            "Bien-être animal",
+            "Bien-être du chien",
+            "Promenade canine",
+            "Service de promenade de chiens",
+            "Suivi GPS des promenades",
+            "Suivi de promenade en temps réel",
+            "Sécurité animale",
+            "Certification des promeneurs",
+            "Assurance promenade chien",
+            "Assurance intégrée aux promenades",
+            "Protection du chien pendant la promenade",
+            "Protection des propriétaires",
+            "Protection des promeneurs",
+            "Gestion des incidents pendant une promenade",
+            "Service premium pour chiens",
+            "Services animaliers à Paris",
+            "Application de promenade de chiens",
+            "Réservation de promenade de chien",
+            "Promenade de chien sécurisée",
+            "Promenade de chien professionnelle",
+            "Promenade de luxe",
+            "Luxe canin"
+          ],
+          "audience": [
+            {
+              "@type": "Audience",
+              "audienceType": "Propriétaires de chiens à Paris"
+            },
+            {
+              "@type": "Audience",
+              "audienceType": "Promeneurs certifiés à Paris"
+            }
+          ],
+          "makesOffer": {
+            "@type": "Offer",
+            "name": "Promenade de chien sécurisée et assurée à Paris",
+            "itemOffered": {
+              "@id": "https://pawpy.fr/#service"
+            }
+          },
+          "mainEntityOfPage": {
+            "@id": "https://pawpy.fr/#webpage"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://pawpy.fr/#website",
+          "url": "https://pawpy.fr/",
+          "name": "Pawpy",
+          "publisher": {
+            "@id": "https://pawpy.fr/#organization"
+          },
+          "inLanguage": "fr-FR"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://pawpy.fr/#webpage",
+          "url": "https://pawpy.fr/",
+          "name": "Pawpy — Promenade de chien à Paris avec des promeneurs certifiés",
+          "description": "Pawpy met en relation les propriétaires de chiens et des promeneurs certifiés à Paris : profil vérifié, promenade suivie en temps réel et paiement sécurisé.",
+          "primaryImageOfPage": "https://pawpy.fr/og-pawpy-promenade-chien-paris.jpg",
+          "isPartOf": {
+            "@id": "https://pawpy.fr/#website"
+          },
+          "about": {
+            "@id": "https://pawpy.fr/#organization"
+          },
+          "mainEntity": {
+            "@id": "https://pawpy.fr/#service"
+          },
+          "inLanguage": "fr-FR"
+        },
+        {
+          "@type": "Service",
+          "@id": "https://pawpy.fr/#service",
+          "name": "Promenade de chien à Paris",
+          "alternateName": [
+            "Service de promenade de chien à Paris",
+            "Promeneur de chien à Paris"
+          ],
+          "serviceType": "Service de promenade de chiens",
+          "description": "Service permettant aux propriétaires de chiens de trouver des promeneurs certifiés, de réserver une promenade, d'en suivre le déroulement en temps réel et de bénéficier d'un cadre sécurisé comprenant une assurance intégrée.",
+          "provider": {
+            "@id": "https://pawpy.fr/#organization"
+          },
+          "areaServed": {
+            "@type": "City",
+            "name": "Paris",
+            "sameAs": "https://www.wikidata.org/wiki/Q90"
+          },
+          "audience": [
+            {
+              "@type": "Audience",
+              "audienceType": "Propriétaires de chiens à Paris"
+            },
+            {
+              "@type": "Audience",
+              "audienceType": "Promeneurs certifiés à Paris"
+            }
+          ],
+          "availableChannel": {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://pawpy.fr/"
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Assurance intégrée",
+              "value": "Une assurance est intégrée aux promenades réservées via Pawpy, selon les conditions applicables."
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "Gestion des incidents",
+              "value": "Chaque promenade réservée via Pawpy s'inscrit dans un cadre défini pour la déclaration et le suivi des incidents."
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "Suivi de promenade",
+              "value": "Suivi GPS en temps réel et éléments de preuve associés à la promenade afin de renforcer la transparence et la sécurité."
+            }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Services Pawpy",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Promenade de chien",
+                  "description": "Promenade de chien réalisée par un promeneur certifié à Paris."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Suivi de promenade",
+                  "description": "Suivi GPS en temps réel de la promenade afin d'apporter davantage de transparence au propriétaire."
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Mise en relation avec un promeneur certifié",
+                  "description": "Mise en relation entre un propriétaire de chien et un promeneur certifié correspondant à ses besoins."
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-bbxqS3t1.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CEvnGUi0.css">
   </head>
   <body>
     <div id="app"></div>
