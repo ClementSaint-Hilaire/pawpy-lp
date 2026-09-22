@@ -4,7 +4,7 @@ import HeroPawTrail from './HeroPawTrail.vue'
 import avatar1 from '@/assets/figma/avatar-1.png'
 import avatar2 from '@/assets/figma/avatar-2.png'
 import avatar3 from '@/assets/figma/avatar-3.png'
-import heroPhone from '@/assets/figma/hero-phone.png'
+import heroPhone from '@/assets/figma/hero-phone.webp'
 import heroDog from '@/assets/figma/hero-dog.png'
 import badgeP1 from '@/assets/figma/icons/badge-p1.png'
 import badgeP2 from '@/assets/figma/icons/badge-p2.png'
@@ -94,6 +94,8 @@ const badges = [
         v-reveal="{ delay: 560, from: 'left' }"
         :src="heroDog"
         alt=""
+        width="824"
+        height="954"
         class="hero-shift-dog pointer-events-none hidden xl:absolute xl:left-[813px] xl:top-[116px] xl:block xl:w-[290px] xl:max-w-none"
       />
 
@@ -124,7 +126,11 @@ const badges = [
       <img
         v-reveal="{ delay: 400, from: 'scale' }"
         :src="heroPhone"
-        alt="L’application Pawpy : promenade en cours, profil du promeneur et formations"
+        alt="Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — l’application Pawpy : promenade en cours, profil du promeneur et formations"
+        width="800"
+        height="1624"
+        fetchpriority="high"
+        decoding="async"
         class="phone-shadow order-1 w-[240px] sm:w-[300px] xl:absolute xl:left-[453px] xl:top-0 xl:order-none xl:w-[389px] xl:max-w-none"
       />
     </div>

@@ -1,15 +1,16 @@
 // Chaque visuel de section est monté en deux calques : un fond carré immobile
 // et le contenu (l'écran de l'app) qui vient s'y poser au fil du défilement.
-// Les .png « feature-x » d'origine restent dans le dossier comme référence du
-// montage final, mais ne sont plus chargés par la page.
-import featureConfianceFond from '@/assets/figma/feature-confiance-fond.png'
-import featureConfianceContent from '@/assets/figma/feature-confiance-content.png'
-import featureBaladeFond from '@/assets/figma/feature-balade-fond.png'
-import featureBaladeContent from '@/assets/figma/feature-balade-content.png'
-import featurePaiementFond from '@/assets/figma/feature-paiement-fond.png'
-import featurePaiementContent from '@/assets/figma/feature-paiement-content.png'
-import featureStatsFond from '@/assets/figma/feature-stats-fond.png'
-import featureStatsContent from '@/assets/figma/feature-stats-content.png'
+// Les .png d'origine restent dans le dossier comme référence (montage final
+// « feature-x.png », sources non compressées) mais ne sont plus chargés : la
+// page sert les .webp, quatre fois plus légers à rendu équivalent.
+import featureConfianceFond from '@/assets/figma/feature-confiance-fond.webp'
+import featureConfianceContent from '@/assets/figma/feature-confiance-content.webp'
+import featureBaladeFond from '@/assets/figma/feature-balade-fond.webp'
+import featureBaladeContent from '@/assets/figma/feature-balade-content.webp'
+import featurePaiementFond from '@/assets/figma/feature-paiement-fond.webp'
+import featurePaiementContent from '@/assets/figma/feature-paiement-content.webp'
+import featureStatsFond from '@/assets/figma/feature-stats-fond.webp'
+import featureStatsContent from '@/assets/figma/feature-stats-content.webp'
 
 import iconCertification from '@/assets/figma/icons/certification.svg'
 import iconFormation from '@/assets/figma/icons/formation.svg'
@@ -38,12 +39,17 @@ const pct = (value) => `${((value / FOND_SIZE) * 100).toFixed(4)}%`
 
 // Le contenu déborde volontairement du carré (le téléphone est rogné en haut
 // ou en bas selon la section) : c'est le fond qui découpe, pas l'image.
-const place = (fond, content, x, y, width) => ({
+// `width` / `height` sont les dimensions naturelles du calque de contenu :
+// posées en attributs sur l'image, elles donnent au navigateur son rapport
+// hauteur/largeur avant le téléchargement.
+const place = (fond, content, x, y, width, height) => ({
   fond,
   content,
   left: pct(x),
   top: pct(y),
-  width: pct(width),
+  cssWidth: pct(width),
+  width,
+  height,
 })
 
 // Les quatre sections « texte + image » : seul le côté de l'image alterne.
@@ -52,8 +58,9 @@ export const features = [
     id: 'confiance',
     eyebrow: 'Confiance',
     title: 'Une entrée filtrée avec promeneurs certifiés.',
-    visual: place(featureConfianceFond, featureConfianceContent, 148, -636, 1258),
-    imageAlt: 'Écran Pawpy d’import ou de passage de la certification ACACED',
+    visual: place(featureConfianceFond, featureConfianceContent, 148, -636, 1258, 2332),
+    imageAlt:
+      'Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — écran Pawpy d’import ou de passage de la certification ACACED',
     reversed: false,
     items: [
       { icon: iconCertification, label: 'Entrée sur certification' },
@@ -67,8 +74,9 @@ export const features = [
     id: 'balade',
     eyebrow: 'Balade',
     title: 'Une promenade d’exception, sans concessions.',
-    visual: place(featureBaladeFond, featureBaladeContent, 72, 44, 1493),
-    imageAlt: 'Notification Pawpy et tracé GPS d’une promenade en cours',
+    visual: place(featureBaladeFond, featureBaladeContent, 72, 44, 1493, 2748),
+    imageAlt:
+      'Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — notification Pawpy et tracé GPS d’une promenade en cours',
     reversed: true,
     items: [
       { icon: iconGps, label: 'Tracking GPS en temps réel' },
@@ -81,8 +89,9 @@ export const features = [
     id: 'paiement',
     eyebrow: 'Paiement',
     title: 'Votre tranquillité commence\navant même la balade.',
-    visual: place(featurePaiementFond, featurePaiementContent, 188, 100, 1178),
-    imageAlt: 'Écran Pawpy de paiement et de réservation d’une promenade',
+    visual: place(featurePaiementFond, featurePaiementContent, 188, 100, 1178, 2168),
+    imageAlt:
+      'Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — écran Pawpy de paiement et de réservation d’une promenade',
     reversed: false,
     items: [
       { icon: iconPaiementSecurise, label: 'Paiement 100% sécurisé' },
@@ -95,8 +104,9 @@ export const features = [
     id: 'stats',
     eyebrow: 'Stats & suivis',
     title: 'La promenade canine devient une science mesurable.',
-    visual: place(featureStatsFond, featureStatsContent, 188, 80, 1178),
-    imageAlt: 'Écran Pawpy de statistiques et de suivi des promenades',
+    visual: place(featureStatsFond, featureStatsContent, 188, 80, 1178, 2168),
+    imageAlt:
+      'Pawpy, application de mise en relation de luxe entre promeneurs certifiés et propriétaires de chiens — écran Pawpy de statistiques et de suivi des promenades',
     reversed: true,
     items: [
       { icon: iconHeure, label: 'Tracé GPS & chronomètre' },
