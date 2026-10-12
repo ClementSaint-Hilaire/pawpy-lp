@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router'
 import FooterDog from './FooterDog.vue'
 import { externalAttrs } from '@/utils/links'
 
@@ -61,7 +62,7 @@ const revealDelay = (index) => index * 80 + (index > 1 ? 80 : 0)
       class="mx-auto flex max-w-[1400px] flex-col items-center gap-[8px] px-6 pb-[64px] pt-[64px] sm:flex-row sm:justify-between md:px-10 xl:px-[50px] xl:pb-[32px] xl:pt-[128px]"
     >
       <p class="font-sans text-caption text-ink-40">© 2026 Pawpy. Tous droits réservés</p>
-      <a href="#" class="font-sans text-caption text-ink-40 transition-colors hover:text-ink">Légal</a>
+      <RouterLink to="/mentions-legales" class="font-sans text-caption text-ink-40 transition-colors hover:text-ink">Légal</RouterLink>
     </div>
   </footer>
 </template>
