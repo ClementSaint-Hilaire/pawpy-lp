@@ -1,21 +1,16 @@
 <script setup>
+import { RouterLink } from 'vue-router'
 import SheetOverlay from '@/components/SheetOverlay.vue'
 import { useRouteSheet } from '@/composables/useRouteSheet'
 import { externalAttrs } from '@/utils/links'
 
-// Les valeurs entre crochets restent à fournir : elles sont affichées telles
-// quelles plutôt que remplacées par une information supposée.
 const publisher = [
   { label: 'Nom commercial', value: 'Pawpy' },
-  { label: 'Éditeur', value: '[Nom et prénom de la personne physique ou dénomination sociale de l’entité responsable]' },
-  { label: 'Statut juridique', value: '[Statut juridique de l’éditeur]' },
-  { label: 'Adresse', value: '[Adresse postale de l’éditeur]' },
-  { label: 'Numéro SIREN / SIRET', value: '[Si immatriculé]' },
-  { label: 'Capital social', value: '[Si société]' },
-  { label: 'Numéro de TVA intracommunautaire', value: '[Si applicable]' },
-  { label: 'Adresse électronique', value: '[Adresse email de contact]' },
-  { label: 'Téléphone', value: '[Numéro de téléphone]' },
-  { label: 'Directeur de la publication', value: '[Nom et prénom]' },
+  { label: 'Éditeur', value: 'Carla Coelho' },
+  { label: 'Statut juridique', value: 'Association' },
+  { label: 'Adresse', value: '40 rue du Chemin Vert, 75011 Paris' },
+  { label: 'Adresse électronique', value: 'contact@pawpy.fr', href: 'mailto:contact@pawpy.fr' },
+  { label: 'Directeur de la publication', value: 'Carla Coelho' },
 ]
 
 const host = [
@@ -28,7 +23,7 @@ const host = [
 ]
 
 const contact = [
-  { label: 'Adresse électronique', value: '[Adresse email officielle de Pawpy]' },
+  { label: 'Adresse électronique', value: 'contact@pawpy.fr', href: 'mailto:contact@pawpy.fr' },
   { label: 'Site internet', value: 'https://pawpy.fr', href: 'https://pawpy.fr' },
 ]
 
@@ -72,7 +67,10 @@ const { open, close } = useRouteSheet('/mentions-legales')
             <div v-for="row in publisher" :key="row.label">
               <dt class="inline text-ink">{{ row.label }}&nbsp;:</dt>
               {{ ' ' }}
-              <dd class="inline">{{ row.value }}</dd>
+              <dd class="inline">
+                <a v-if="row.href" :href="row.href" :class="link">{{ row.value }}</a>
+                <template v-else>{{ row.value }}</template>
+              </dd>
             </div>
           </dl>
         </section>
@@ -187,7 +185,7 @@ const { open, close } = useRouteSheet('/mentions-legales')
           </p>
           <p>
             Pour exercer leurs droits, les personnes concernées peuvent contacter l’éditeur à
-            l’adresse suivante : <span class="text-ink">[Adresse email dédiée à la protection des données]</span>.
+            l’adresse suivante : <a href="mailto:contact@pawpy.fr" :class="link">contact@pawpy.fr</a>.
           </p>
           <p>
             Elles peuvent également introduire une réclamation auprès de la Commission nationale
@@ -197,7 +195,7 @@ const { open, close } = useRouteSheet('/mentions-legales')
           <p>
             Les modalités détaillées des traitements, leurs bases légales, les destinataires des
             données, les durées de conservation et les éventuels transferts sont présentés dans
-            notre <span class="text-ink">[Politique de confidentialité]</span>.
+            notre <RouterLink to="/politique-de-confidentialite" :class="link">Politique de confidentialité</RouterLink>.
           </p>
         </section>
 
@@ -220,7 +218,7 @@ const { open, close } = useRouteSheet('/mentions-legales')
           <p>
             Les informations détaillées concernant les traceurs effectivement utilisés, leurs
             finalités et leurs durées de conservation figurent dans la
-            <span class="text-ink">[Politique de cookies]</span>.
+            <span class="text-ink">Politique de cookies</span>.
           </p>
         </section>
 
