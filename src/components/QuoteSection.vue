@@ -1,38 +1,41 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import quoteAvatar from '@/assets/figma/quote-avatar.png'
+import quoteAvatar1 from '@/assets/figma/quote-avatar-1.webp'
+import quoteAvatar2 from '@/assets/figma/quote-avatar-2.webp'
+import quoteAvatar3 from '@/assets/figma/quote-avatar-3.webp'
+import quoteAvatar4 from '@/assets/figma/quote-avatar-4.webp'
 
-// Durée d'affichage d'un témoignage, en ms. Le basculement `.quote-slide`
-// (main.css) prend ~580 ms — effacement puis apparition, jamais les deux en
-// même temps — et se termine donc largement avant le suivant.
-const INTERVAL = 5000
+// Durée d'affichage d'un témoignage, en ms — de quoi lire une citation d'une
+// cinquantaine de mots. Le basculement `.quote-slide` (main.css) prend ~580 ms
+// — effacement puis apparition, jamais les deux en même temps — et se termine
+// donc largement avant le suivant.
+const INTERVAL = 10000
 
-// TODO : noms d'attente pour les auteurs 2 à 4, et une seule photo exportée du
-// Figma — les trois autres la reprennent en attendant leurs portraits.
+// TODO : noms d'attente pour les auteurs 2 à 4.
 const testimonials = [
   {
     quote:
       "Je culpabilisais de laisser Nino seul toute la journée sans savoir à qui le confier. Avec Pawpy, j'ai trouvé un promeneur certifié, échangé avec lui avant la balade, et je suis sa sortie en direct sur la carte GPS. Aujourd'hui je pars travailler l'esprit tranquille.",
     author: 'Steve Travail',
-    avatar: quoteAvatar,
+    avatar: quoteAvatar1,
   },
   {
     quote:
       "Saga tire comme un camion et je n'osais plus la confier à personne. Sur Pawpy, mon promeneur est certifié ACACED et formé aux chiens difficiles. On s'est rencontrés avant, j'ai vu son sérieux, et je reçois une notif à chaque sortie. Enfin quelqu'un à qui je fais vraiment confiance.",
     author: 'Marie Dupont',
-    avatar: quoteAvatar,
+    avatar: quoteAvatar2,
   },
   {
     quote:
       "Je voyage souvent et l'idée de laisser Milo m'angoissait à chaque déplacement. Avec Pawpy, je suis chaque balade en direct sur la carte, je reçois le tracé GPS et le rapport à la fin. Où que je sois, je sais qu'il a sa sortie d'une heure. Je pars enfin l'esprit léger.",
     author: 'Julien Mercier',
-    avatar: quoteAvatar,
+    avatar: quoteAvatar3,
   },
   {
     quote:
       "Avant, je payais en liquide sans jamais savoir ce que j'allais avoir. Sur Pawpy, le prix est clair avant de valider, tout se règle dans l'appli et je garde l'historique. J'ai choisi mon promeneur, fixé mon budget, et Câline a sa promenade. Simple, carré, sans mauvaise surprise.",
     author: 'Sofia Renard',
-    avatar: quoteAvatar,
+    avatar: quoteAvatar4,
   },
 ]
 
