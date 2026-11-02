@@ -12,11 +12,12 @@ export default createRouter({
   routes: [
     { path: '/', name: 'home', component: Home },
 
-    // Le manifeste, l'équipe et les mentions légales sont des modales posées sur
-    // l'accueil (voir ManifestOverlay.vue, TeamOverlay.vue et LegalOverlay.vue) :
-    // leurs routes servent donc la même page, dont RouterView réutilise
-    // l'instance — scroll et apparitions déjà jouées survivent à l'ouverture
-    // comme à la fermeture.
+    // Le manifeste, l'équipe, les mentions légales et la politique de
+    // confidentialité sont des modales posées sur l'accueil (voir
+    // ManifestOverlay.vue, TeamOverlay.vue, LegalOverlay.vue et
+    // PrivacyOverlay.vue) : leurs routes servent donc la même page, dont
+    // RouterView réutilise l'instance — scroll et apparitions déjà jouées
+    // survivent à l'ouverture comme à la fermeture.
     //
     // Des alias de « / » ne conviendraient pas : les chemins partageraient un
     // seul enregistrement de route, Vue Router prendrait la navigation pour un
@@ -24,6 +25,7 @@ export default createRouter({
     { path: '/manifest', name: 'manifest', component: Home },
     { path: '/auto-mode-setup', name: 'team', component: Home },
     { path: '/mentions-legales', name: 'legal', component: Home },
+    { path: '/politique-de-confidentialite', name: 'privacy', component: Home },
 
     {
       path: '/confirmation',
